@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "blog-tutorials"
+version = "0.1.0"
+description = ""
+authors = ["James <jamesbrendamour3@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.1"
+uvicorn = "^0.30.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
