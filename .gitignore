@@ -126,3 +126,9 @@ dmypy.json
 path/to/data/
 
 .idea/
+
+__pycache__
+*.pyc
+todo-env/
+
+
