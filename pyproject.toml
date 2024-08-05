@@ -6,9 +6,11 @@ authors = ["James <jamesbrendamour3@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 fastapi = "^0.111.1"
 uvicorn = "^0.30.3"
+llama-index = "^0.10.59"
+langchain = "^0.2.12"
 
 
 [build-system]
