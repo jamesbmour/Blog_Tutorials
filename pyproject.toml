@@ -11,6 +11,8 @@ fastapi = "^0.111.1"
 uvicorn = "^0.30.3"
 llama-index = "^0.10.59"
 langchain = "^0.2.12"
+streamlit = "^1.37.0"
+llama-index-llms-ollama = "^0.2.2"
 
 
 [build-system]
