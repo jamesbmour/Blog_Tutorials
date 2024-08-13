@@ -1,0 +1,367 @@
+[
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "Field",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "EmailStr",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "validator",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "constr",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "HTMLResponse",
+        "importPath": "starlette.responses",
+        "description": "starlette.responses",
+        "isExtraImport": true,
+        "detail": "starlette.responses",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "SimpleDirectoryReader",
+        "importPath": "llama_index.core",
+        "description": "llama_index.core",
+        "isExtraImport": true,
+        "detail": "llama_index.core",
+        "documentation": {}
+    },
+    {
+        "label": "VectorStoreIndex",
+        "importPath": "llama_index.core",
+        "description": "llama_index.core",
+        "isExtraImport": true,
+        "detail": "llama_index.core",
+        "documentation": {}
+    },
+    {
+        "label": "ServiceContext",
+        "importPath": "llama_index.core",
+        "description": "llama_index.core",
+        "isExtraImport": true,
+        "detail": "llama_index.core",
+        "documentation": {}
+    },
+    {
+        "label": "Settings",
+        "importPath": "llama_index.core",
+        "description": "llama_index.core",
+        "isExtraImport": true,
+        "detail": "llama_index.core",
+        "documentation": {}
+    },
+    {
+        "label": "Ollama",
+        "importPath": "llama_index.llms.ollama",
+        "description": "llama_index.llms.ollama",
+        "isExtraImport": true,
+        "detail": "llama_index.llms.ollama",
+        "documentation": {}
+    },
+    {
+        "label": "OllamaEmbedding",
+        "importPath": "llama_index.embeddings.ollama",
+        "description": "llama_index.embeddings.ollama",
+        "isExtraImport": true,
+        "detail": "llama_index.embeddings.ollama",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "FastAPI.FastAPI_Part1.main",
+        "description": "FastAPI.FastAPI_Part1.main",
+        "peekOfCode": "app = FastAPI()\n@app.get(\"/\")\nasync def root():\n    return {\"message\": \"Hello, World!\"}",
+        "detail": "FastAPI.FastAPI_Part1.main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "FastAPI.FastAPI_Part2.main",
+        "description": "FastAPI.FastAPI_Part2.main",
+        "peekOfCode": "app = FastAPI()\n# Basic routing with an HTTP GET method to return a welcome message\n@app.get(\"/\")\nasync def home():\n    return {\"message\": \"Welcome to our API!\"}\n@app.post(\"/items/\", status_code=status.HTTP_201_CREATED, tags=[\"Item Operations\"])\nasync def create_item(item: Item):\n    \"\"\"\n    Create an item in the database.\n    \"\"\"",
+        "detail": "FastAPI.FastAPI_Part2.main",
+        "documentation": {}
+    },
+    {
+        "label": "Address",
+        "kind": 6,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "class Address(BaseModel):\n    street: str\n    city: str\n    postal_code: str\n    state: str\n    country: str\n    zip_code: str\nclass User(BaseModel):\n    id: int\n    username: str",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "kind": 6,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "class User(BaseModel):\n    id: int\n    username: str\n    name: str = Field(..., example=\"John Doe\", min_length=2, max_length=50)\n    age: int = Field(ge=18, le=100, description=\"Age must be between 18 and 100.\")\n    email: EmailStr = Field(description=\"Email address of the user.\")\n    bio: Optional[str] = Field(None, max_length=300, description=\"A brief biography of the user.\")\n    address: Address  # Nested model\n    @validator('name')\n    def name_must_contain_space(cls, v):",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "Item",
+        "kind": 6,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "class Item(BaseModel):\n    id: int\n    name: str\n    description: Optional[str] = None\n    price: float\n@app.post(\"/users/\", response_model=User)\nasync def create_user(user: User):\n    if user.username in database_usernames:\n        raise HTTPException(status_code=400, detail=\"Username already registered\")\n    database_usernames.add(user.username)  # Add username to the simulated database",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "app = FastAPI()\n# Simulated database for demonstration\ndatabase_usernames = set()  # This set will store usernames to simulate a user database.\ndatabase_items = {}  # This dictionary will simulate an item database by item_id.\nclass Address(BaseModel):\n    street: str\n    city: str\n    postal_code: str\n    state: str\n    country: str",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "database_usernames",
+        "kind": 5,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "database_usernames = set()  # This set will store usernames to simulate a user database.\ndatabase_items = {}  # This dictionary will simulate an item database by item_id.\nclass Address(BaseModel):\n    street: str\n    city: str\n    postal_code: str\n    state: str\n    country: str\n    zip_code: str\nclass User(BaseModel):",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "database_items",
+        "kind": 5,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "database_items = {}  # This dictionary will simulate an item database by item_id.\nclass Address(BaseModel):\n    street: str\n    city: str\n    postal_code: str\n    state: str\n    country: str\n    zip_code: str\nclass User(BaseModel):\n    id: int",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "database_items[1]",
+        "kind": 5,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "database_items[1] = Item(id=1, name=\"Widget\", description=\"A useful widget\", price=15.99)\ndatabase_items[2] = Item(id=2, name=\"Gadget\", description=\"An essential gadget\", price=23.50)\n# Running the API with Uvicorn. This command should be in a separate runner file or in the command line.\n# `uvicorn main:app --reload` where `main` is the name of your Python file.",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "database_items[2]",
+        "kind": 5,
+        "importPath": "FastAPI.FastAPI_Part3.main",
+        "description": "FastAPI.FastAPI_Part3.main",
+        "peekOfCode": "database_items[2] = Item(id=2, name=\"Gadget\", description=\"An essential gadget\", price=23.50)\n# Running the API with Uvicorn. This command should be in a separate runner file or in the command line.\n# `uvicorn main:app --reload` where `main` is the name of your Python file.",
+        "detail": "FastAPI.FastAPI_Part3.main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "FastAPI_Todo_App.Todo_Part1.main",
+        "description": "FastAPI_Todo_App.Todo_Part1.main",
+        "peekOfCode": "app = FastAPI()\n@app.get(\"/\")\nasync def root():\n    return {\"message\": \"Welcome to the Todo App!\"}\n@app.get(\"/current-time\")\nasync def get_current_time():\n    current_time = datetime.now()\n    return {\n        \"current_date\": current_time.strftime(\"%Y-%m-%d\"),\n        \"current_time\": current_time.strftime(\"%H:%M:%S\"),",
+        "detail": "FastAPI_Todo_App.Todo_Part1.main",
+        "documentation": {}
+    },
+    {
+        "label": "llm",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "llm = Ollama(model=\"phi3\")\nSettings.llm = llm\n# ollama pull snowflake-arctic-embed\nembed_model = OllamaEmbedding(model_name=\"snowflake-arctic-embed\")\nSettings.embed_model = embed_model\n# service_context = ServiceContext.from_defaults(llm=llm, embed_model=embed_model)\n#%%\n# Define the path to your directory containing the sample.txt file\n# directory_path = './data'\ndirectory_path = 'llamaindex-series/data'",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "Settings.llm",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "Settings.llm = llm\n# ollama pull snowflake-arctic-embed\nembed_model = OllamaEmbedding(model_name=\"snowflake-arctic-embed\")\nSettings.embed_model = embed_model\n# service_context = ServiceContext.from_defaults(llm=llm, embed_model=embed_model)\n#%%\n# Define the path to your directory containing the sample.txt file\n# directory_path = './data'\ndirectory_path = 'llamaindex-series/data'\n# Load documents",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "embed_model",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "embed_model = OllamaEmbedding(model_name=\"snowflake-arctic-embed\")\nSettings.embed_model = embed_model\n# service_context = ServiceContext.from_defaults(llm=llm, embed_model=embed_model)\n#%%\n# Define the path to your directory containing the sample.txt file\n# directory_path = './data'\ndirectory_path = 'llamaindex-series/data'\n# Load documents\ndocuments = SimpleDirectoryReader(directory_path).load_data()\n#%%",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "Settings.embed_model",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "Settings.embed_model = embed_model\n# service_context = ServiceContext.from_defaults(llm=llm, embed_model=embed_model)\n#%%\n# Define the path to your directory containing the sample.txt file\n# directory_path = './data'\ndirectory_path = 'llamaindex-series/data'\n# Load documents\ndocuments = SimpleDirectoryReader(directory_path).load_data()\n#%%\n# Create index",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "directory_path",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "directory_path = 'llamaindex-series/data'\n# Load documents\ndocuments = SimpleDirectoryReader(directory_path).load_data()\n#%%\n# Create index\nindex = VectorStoreIndex.from_documents(documents, show_progress=True)\n#%%\n# Create query engine\nquery_engine = index.as_query_engine(llm=llm)\n#%%",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "documents",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "documents = SimpleDirectoryReader(directory_path).load_data()\n#%%\n# Create index\nindex = VectorStoreIndex.from_documents(documents, show_progress=True)\n#%%\n# Create query engine\nquery_engine = index.as_query_engine(llm=llm)\n#%%\n# Perform a query\nresponse = query_engine.query(\"What is LlamaIndex?\")",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "index",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "index = VectorStoreIndex.from_documents(documents, show_progress=True)\n#%%\n# Create query engine\nquery_engine = index.as_query_engine(llm=llm)\n#%%\n# Perform a query\nresponse = query_engine.query(\"What is LlamaIndex?\")\nprint(response)",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "query_engine",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "query_engine = index.as_query_engine(llm=llm)\n#%%\n# Perform a query\nresponse = query_engine.query(\"What is LlamaIndex?\")\nprint(response)",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    },
+    {
+        "label": "response",
+        "kind": 5,
+        "importPath": "llamaindex-series.part_1",
+        "description": "llamaindex-series.part_1",
+        "peekOfCode": "response = query_engine.query(\"What is LlamaIndex?\")\nprint(response)",
+        "detail": "llamaindex-series.part_1",
+        "documentation": {}
+    }
+]
