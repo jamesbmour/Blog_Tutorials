@@ -132,3 +132,4 @@ __pycache__
 todo-env/
 
 
+!/.env
