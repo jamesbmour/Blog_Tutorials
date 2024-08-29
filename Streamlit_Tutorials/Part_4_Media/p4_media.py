@@ -6,12 +6,25 @@ from io import BytesIO
 # Title
 st.title("Media: Images, Videos, Audio, Files")
 
-# Header
-st.header("Images")
-img_url = "https://images.ctfassets.net/23aumh6u8s0i/2Qhstbnq6i34wLoPoAjWoq/9f66f58a22870df0d72a3cbaf77ce5b6/streamlit_hero.jpg"
-response = requests.get(img_url)
-image = Image.open(BytesIO(response.content))
-st.image(image, caption="Streamlit Hero Image", use_column_width=True)
+# Display Image
+st.header("Display Images")
+image_url = "https://images.unsplash.com/photo-1705900266125-3b999d5a5c62?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+st.image(image_url, caption='Twilight Whisper over Mount Cook of New Zealand', use_column_width=True)
 
+
+
+
+# st.video
+st.header("Display Videos")
+video_url = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
+st.video(video_url, start_time=0)
+
+
+
+
+# st.audio
+st.header("Display Audio")
+audio_url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+st.audio(audio_url, format='audio/mp3')
 
 
