@@ -1,10 +1,5 @@
 # Part 2: Text Elements
 import streamlit as st
-import pandas as pd
-
-st.markdown("*Streamlit* is **really** ***cool***.")
-
-
 
 
 # st.title
