@@ -17,14 +17,13 @@ st.image(image_url, caption='Twilight Whisper over Mount Cook of New Zealand', u
 # st.video
 st.header("Display Videos")
 video_url = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
-st.video(video_url, start_time=0)
-
-
+st.video(video_url, start_time=0)ß
 
 
 # st.audio
 st.header("Display Audio")
 audio_url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
 st.audio(audio_url, format='audio/mp3')
+
 
 
