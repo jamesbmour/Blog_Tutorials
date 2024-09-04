@@ -1,6 +1,4 @@
 # Part 2: Text Elements in Streamlit
-# In this section, we'll explore various text elements provided by Streamlit to enhance our app's presentation.
-
 import streamlit as st
 
 # st.title: The st.title() function is used to display a large title at the top of the app.
