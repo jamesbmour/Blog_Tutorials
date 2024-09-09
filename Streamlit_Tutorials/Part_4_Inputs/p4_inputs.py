@@ -2,7 +2,7 @@
 import streamlit as st
 
 # Set the title of the app
-st.title("Inputs in Streamlit")
+st.title("Streamlit Part 4: Inputs in Streamlit")
 
 # Create columns for better UI
 # Using two columns to split the inputs across the screen for a cleaner and more organized layout.
@@ -10,7 +10,6 @@ col1, col2 = st.columns(2)
 
 # Column 1
 with col1:
-
     # Button Input
     # The st.button widget creates a clickable button.
     # Discuss how buttons can trigger events when clicked.
@@ -63,7 +62,6 @@ with col1:
     if multiselect_val:
         st.write(f"You selected {multiselect_val}")
 
-
     # Select Slider Input
     # The st.select_slider widget is similar to the slider but allows for discrete steps.
     # Useful when the range has specific, predefined values.
@@ -97,8 +95,6 @@ with col2:
     number_input_val = st.number_input("Enter a number")
     if number_input_val:
         st.write(f"You entered {number_input_val}")
-
-
 
     # Date Input
     # The st.date_input widget allows users to select a date from a calendar.

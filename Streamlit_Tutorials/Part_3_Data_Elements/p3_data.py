@@ -1,12 +1,9 @@
-# Streamlit Part 3: Data Elements
-# In this section, we'll explore various data-related elements provided by Streamlit
-# to display and interact with datasets in your app.
-
 import streamlit as st
 import pandas as pd
+from pandas_profiling import ProfileReport
 
 # Set the title of the app using st.title(). This serves as the main heading of your Streamlit application.
-st.title("Streamlit Tutorials")
+st.title("Streamlit Part 3: Data Elements")
 
 # st.dataframe: This element allows you to display a pandas DataFrame with features like sorting and scrolling.
 # It's interactive, so users can explore the data within the app.
@@ -16,11 +13,12 @@ st.write("Dataframe using st.dataframe()")
 # Creating a simple DataFrame for demonstration.
 df = pd.DataFrame({
     "Column 1": [1, 2, 3, 4],
-    "Column 2": [10, 20, 30, 40]
+    "Column 2": [10, 20, 30, 40],
+    "Column 3": [100, 200, 300, 400]
 })
 
 # Displaying the DataFrame using st.dataframe().
-st.dataframe(df)
+st.dataframe(df, width=500, height=200)
 
 # st.table: This function displays a static table with no interactive features.
 # It's great for showing a snapshot of your data in a simple and clean format.
@@ -28,7 +26,7 @@ st.header("st.table")
 st.write("Table using st.table()")
 
 # Displaying the DataFrame as a table using st.table().
-st.table(df)
+st.table(df, width=500, height=200)
 
 # st.json: This element allows you to display JSON data in a formatted and readable manner.
 # It's useful for working with APIs or when you want to show raw data in JSON format.
@@ -38,8 +36,9 @@ st.write("JSON using st.json()")
 # Displaying a simple JSON object using st.json().
 st.json({
     "Column 1": [1, 2, 3, 4],
-    "Column 2": [10, 20, 30, 40]
-})
+    "Column 2": [10, 20, 30, 40],
+    "Column 3": [100, 200, 300, 400]
+}, expanded=True)
 
 # st.column_config: This element allows you to configure the layout of your app's columns.
 # It's useful when you want to customize the width or alignment of columns.
@@ -58,11 +57,11 @@ st.column_config = {"wideMode": True}  # This line is a placeholder as Streamlit
 st.header("st.pandas_profiling")
 st.write("Pandas Profiling using st.pandas_profiling()")
 
-# Importing pandas_profiling and creating a profile report of the DataFrame.
-from pandas_profiling import ProfileReport
+
 profile = ProfileReport(df, title="Pandas Profiling Report")
 
-# Displaying the profile report using st.write(). Note that the display of ProfileReport in Streamlit requires using st.components.v1 or exporting as HTML.
+# Displaying the profile report using st.write(). Note that the display of ProfileReport in Streamlit requires using
+# st.components.v1 or exporting as HTML.
 st.write(profile)
 
 # st.data_editor: This function creates an interactive data editor within the app.
