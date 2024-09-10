@@ -15,7 +15,9 @@ st.header("st.dataframe")
 df = pd.DataFrame({
     "Column 1": [1, 2, 3, 4],
     "Column 2": [10, 20, 30, 40],
-    "Column 3": [100, 200, 300, 400]
+    "Column 3": [100, 200, 300, 400],
+    "Column 4": [1000, 2000, 3000, 4000]
+
 })
 
 # Displays interactive dataframe in table form.
@@ -37,18 +39,31 @@ st.json({
     "Column 1": [1, 2, 3, 4],
     "Column 2": [10, 20, 30, 40],
     "Column 3": [100, 200, 300, 400]
+
 }, expanded=True)
 
 # st.column_config: This element allows you to configure the layout of your app's columns.
 # It's useful when you want to customize the width or alignment of columns.
 st.header("st.column_config")
+data_df = pd.DataFrame(
+    {
+        "widgets": ["st.selectbox", "st.number_input", "st.text_area", "st.button"],
+    }
+)
 
-# Example: This would be where you configure column width or other properties.
-# Note that Streamlit's layout options are typically handled with st.columns(), but
-# this placeholder shows how to introduce such a concept.
-st.write("This is a wide column")
-st.write("This is a narrow column")
-st.column_config = {"wideMode": True}  # This line is a placeholder as Streamlit doesn't directly support this yet.
+st.data_editor(
+    df,
+    column_config={
+        "widgets": st.column_config.Column(
+            "Streamlit Widgets",
+            help="Streamlit **widget** commands 🎈",
+            width="medium",
+            required=True,
+        )
+    },
+    hide_index=True,
+    num_rows="dynamic",
+)
 
 # st.pandas_profiling: This is an external tool integrated with Streamlit to create an in-depth report of a DataFrame.
 # It generates statistics, visualizations, and summaries automatically.
