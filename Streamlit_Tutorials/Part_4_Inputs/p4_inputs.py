@@ -1,4 +1,6 @@
+# Streamlit Part 4: Inputs in Streamlit
 import streamlit as st
+
 
 # set config for wide mode and auto rerun
 st.set_page_config(layout="wide")
@@ -27,21 +29,21 @@ with col1:
     # "Next, we have a link button using `st.link_button`. This is useful when you want to redirect users to an external link.
     # Here, clicking the button will open the Streamlit homepage."
     st.subheader("Link Button")
-    if st.link_button("Click Me", "https://www.streamlit.io/", help="Redirects to Streamlit's homepage"):
+    if st.link_button("Click Me", "https://www.streamlit.io/"):
         st.write("Link Button Clicked")
 
     # Download Button
     # "The `st.download_button` is perfect for allowing users to download files directly from your app. 
     # You specify the file content and the filename. In this example, clicking the button will download a simple text file."
     st.subheader("Download Button")
-    if st.download_button("Download Me", "hello world", "hello.txt", mime='text/plain', help="Download a simple text file"):
+    if st.download_button("Download Me", "hello world", "hello.txt", mime='text/plain'):
         st.write("Download Button Clicked")
 
     # Checkbox Input
     # "Moving on to checkboxes, the `st.checkbox` widget is great for toggling options. 
     # You can use it to control different states in your app. We’ll show a message when this checkbox is checked."
     st.subheader("Checkbox")
-    checkbox_val = st.checkbox("Check Me", value=False, help="Toggle this option")
+    checkbox_val = st.checkbox("Check Me", value=False)
     if checkbox_val:
         st.write("Checkbox Checked")
 
@@ -49,7 +51,7 @@ with col1:
     # "Radio buttons are perfect when you want users to select one option from a list. 
     # We use `st.radio` for this. Here, users can choose a color, and we display the selected value."
     st.subheader("Radio")
-    radio_val = st.radio("Select Color", ["Red", "Green", "Blue"], index=0, help="Choose one option")
+    radio_val = st.radio("Select Color", ["Red", "Green", "Blue"], index=0)
     if radio_val:
         st.write(f"You selected {radio_val}")
 
@@ -57,7 +59,7 @@ with col1:
     # "The `st.selectbox` is similar to radio buttons but comes in a dropdown format, which is great for saving space 
     # when you have many options. We'll demonstrate this by selecting a color from a dropdown menu."
     st.subheader("Selectbox")
-    select_val = st.selectbox("Select Color", ["Red", "Green", "Blue"], index=1, help="Dropdown selection")
+    select_val = st.selectbox("Select Color", ["Red", "Green", "Blue","Black"], index=1)
     if select_val:
         st.write(f"You selected {select_val}")
 
@@ -65,7 +67,7 @@ with col1:
     # "With `st.multiselect`, users can select multiple options from a list. 
     # This is useful when more than one choice is allowed. Here, you can pick multiple colors."
     st.subheader("Multiselect")
-    multiselect_val = st.multiselect("Select Colors", ["Red", "Green", "Blue"], default=["Red"], help="Choose multiple options")
+    multiselect_val = st.multiselect("Select Colors", ["Red", "Green", "Blue","Black"], default=["Red"])
     if multiselect_val:
         st.write(f"You selected {multiselect_val}")
 
@@ -73,7 +75,7 @@ with col1:
     # "The `st.select_slider` widget lets you select from a range of options but with discrete steps. 
     # This is handy when you want users to pick from predefined values. Here, the range is from 1 to 100."
     st.subheader("Select Slider")
-    select_slider_val = st.select_slider("Select Value", options=range(1, 101), value=50, help="Slide to select a value")
+    select_slider_val = st.select_slider("Select Value", options=range(1, 101), value=50)
     if select_slider_val:
         st.write(f"You selected {select_slider_val}")
 
@@ -83,7 +85,7 @@ with col2:
     # "Now, let's move on to text inputs. The `st.text_input` widget allows users to enter a single line of text. 
     # This is perfect for short inputs like names or titles. Here, we’ll capture and display the input."
     st.subheader("Text Input")
-    text_input_val = st.text_input("Enter some text", value="", max_chars=50, help="Type your text here")
+    text_input_val = st.text_input("Enter some text", value="", max_chars=50)
     if text_input_val:
         st.write(f"You entered {text_input_val}")
 
@@ -91,7 +93,7 @@ with col2:
     # "For longer text inputs, we use `st.text_area`. This provides a multi-line text box, great for comments or descriptions. 
     # In this example, we'll capture and display the entered text."
     st.subheader("Text Area")
-    text_area_val = st.text_area("Enter some text", value="", height=150, max_chars=200, help="Type your longer text here")
+    text_area_val = st.text_area("Enter some text", value="", height=150, max_chars=200)
     if text_area_val:
         st.write(f"You entered {text_area_val}")
 
@@ -99,7 +101,7 @@ with col2:
     # "The `st.number_input` widget is used for numerical inputs. You can set minimum, maximum values, and the step size. 
     # This is useful for things like quantities or ages. Here, users will input a number."
     st.subheader("Number Input")
-    number_input_val = st.number_input("Enter a number", value=0, min_value=0, max_value=100, step=1, help="Input a numeric value")
+    number_input_val = st.number_input("Enter a number", value=0, min_value=0, max_value=100, step=1)
     if number_input_val:
         st.write(f"You entered {number_input_val}")
 
@@ -107,7 +109,7 @@ with col2:
     # "For selecting dates, `st.date_input` provides a nice calendar interface. 
     # This is ideal for date-based inputs like appointments or deadlines. Here, we'll select and display a date."
     st.subheader("Date Input")
-    date_input_val = st.date_input("Enter a date", help="Select a date")
+    date_input_val = st.date_input("Enter a date")
     if date_input_val:
         st.write(f"You selected {date_input_val}")
 
@@ -115,7 +117,7 @@ with col2:
     # "Similarly, `st.time_input` allows users to input a time, which is useful for scheduling tasks. 
     # We'll let users pick a time and then display it."
     st.subheader("Time Input")
-    time_input_val = st.time_input("Enter a time", help="Select a time")
+    time_input_val = st.time_input("Enter a time")
     if time_input_val:
         st.write(f"You selected {time_input_val}")
 
@@ -123,7 +125,7 @@ with col2:
     # "The `st.file_uploader` widget is designed for uploading files. You can specify allowed file types to ensure the correct files are uploaded. 
     # Here, we allow image and text file uploads."
     st.subheader("File Uploader")
-    file_uploader_val = st.file_uploader("Upload a file", type=["png", "jpg", "txt"], help="Upload an image or text file")
+    file_uploader_val = st.file_uploader("Upload a file", type=["png", "jpg", "txt"])
     if file_uploader_val:
         st.write(f"You uploaded {file_uploader_val.name}")
 
@@ -131,7 +133,7 @@ with col2:
     # "The `st.color_picker` widget is a fun one, allowing users to pick a color using a color picker tool. 
     # This could be useful in design applications or when color selection is needed."
     st.subheader("Color Picker")
-    color_picker_val = st.color_picker("Pick a color", value="#00f900", help="Pick your favorite color")
+    color_picker_val = st.color_picker("Pick a color", value="#00f900")
     if color_picker_val:
         st.write(f"You picked {color_picker_val}")
 
