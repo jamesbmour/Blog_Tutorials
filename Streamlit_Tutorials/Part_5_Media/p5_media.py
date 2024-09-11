@@ -1,5 +1,8 @@
 # Streamlit Part 5: Working with Media Elements
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
+
+count = st_autorefresh(interval=4000, limit=200, key="refresh_counter")
 
 st.title("Streamlit Part 5: Media: Images, Videos, Audio, Files")
 
@@ -71,7 +74,7 @@ st.video(video_url, start_time=0)
 st.subheader("4. Display Audio")
 
 audio_url = "https://sample-videos.com/audio/mp3/crowd-cheering.mp3"
-st.audio(audio_url, format="audio/mp3")
+st.audio(audio_url, format="audio/mp3", start_time=5)
 # st.audio() embeds an audio player in the Streamlit app
 # Parameters:
 #   - audio_url: URL of the audio file to play
