@@ -1,0 +1,5 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "${env:HOME}/Library/Application Support/Code/User/globalStorage/biati.ddev-manager/exposed-commands:${env:PATH}"
+    }
+}

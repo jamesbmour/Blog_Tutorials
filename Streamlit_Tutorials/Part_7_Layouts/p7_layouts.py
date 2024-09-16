@@ -1,105 +1,107 @@
 import streamlit as st
+import time
 
+# Set the page configuration
 st.set_page_config(
-    page_title="Streamlit Part 7: Layouts",
-    page_icon="random",
+    page_title="Streamlit Layouts Tutorial",
+    page_icon=":art:",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-st.title("Streamlit Part 7: Layouts")
+st.title("Streamlit Layouts Tutorial")
 
+# 1. Columns
+st.header("Columns")
+st.write("Using `st.columns()` to create columns.")
 
-# using st.columns
-st.write("### This is outside the columns")
+# Create two columns
 col1, col2 = st.columns(2)
 
 with col1:
     st.write("This is column 1")
-    st.button("Press me")
-
+    if st.button("Button in Column 1"):
+        st.write("btn 1 pressed")
 
 with col2:
     st.write("This is column 2")
-    st.button("Press me 2")
+    if st.button("Button in Column 2"):
+        st.write("Button 2 Pressed")
 
-# using st.container
-st.write("### This is outside the container")
-container = st.container()
-with container:
-    st.write("This is inside the container")
-    st.button("Container 1")
+# 2. Container
+st.header("Container")
+st.write("Using `st.container()` to group elements together.")
 
-# using st.dialog
-st.write("### This is outside the dialog")
+with st.container():
+    st.write("This is inside a container")
+    st.button("Button inside container")
 
+    # Nested container
+    with st.container():
+        st.write("This is a nested container")
+        st.button("Button inside nested container")
 
-# with st.dialog("This is a dialog"):
-#     st.write("This is inside the dialog")
-#     st.button("Container 2")
-@st.dialog("Cast your vote")
-def vote(item):
-    st.write(f"Why is {item} your favorite?")
-    reason = st.text_input("Because...")
-    if st.button("Submit"):
-        st.session_state.vote = {"item": item, "reason": reason}
-        st.rerun()
+# 3. Empty
+st.header("Empty")
+st.write("Using `st.empty()` as a placeholder for updating content.")
 
+placeholder = st.empty()
 
-if "vote" not in st.session_state:
-    st.write("Vote for your favorite")
-    if st.button("A"):
-        vote("A")
-    if st.button("B"):
-        vote("B")
-else:
-    f"You voted for {st.session_state.vote['item']} because {st.session_state.vote['reason']}"
+# Update the placeholder content dynamically
+for i in range(5):
+    placeholder.write(f"Updating... {i}")
+    time.sleep(1)
 
-# using st.empty
-st.write("### This is outside the empty")
+placeholder.write("Done!")
 
-empty = st.empty()
-empty.write("This is inside the empty")
-empty.button("Empty")
+# 4. Expander
+st.header("Expander")
+st.write("Using `st.expander()` to hide/show content.")
 
-# using st.expander
-st.write("### This is outside the expander")
-with st.expander("This is an expander"):
+with st.expander("Click to expand"):
     st.write("This is inside the expander")
-    st.button("Expander")
-
-# using st.form
-st.write("### This is outside the form")
-with st.form("This is a form"):
-    st.write("This is inside the form")
-    name = st.text_input("Name")
-    st.form_submit_button("Form")
-    st.write(f"Name: {name}")
+    st.button("Button inside expander")
+    ecol1, ecol2 = st.columns(2)
+    with ecol1:
+        st.write("This is column 1")
+    with ecol2:
+        st.write("This is column 2")
 
 
-# using st.popover
-st.write("### This is outside the popover")
-with st.popover("This is a popover"):
-    st.write("This is inside the popover")
-    st.button("Popover")
+# 5. Form
+st.header("Form")
+st.write("Using `st.form()` to group input widgets with a submit button.")
 
-# using st.sidebar
-st.write("### This is outside the sidebar")
+with st.form("my_form"):
+    st.write("Inside the form")
+    name = st.text_input("Enter your name")
+    age = st.number_input("Enter your age", min_value=0, max_value=120, step=1)
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        st.write(f"Hello {name}, you are {age} years old.")
+
+# 6. Sidebar
+st.header("Sidebar")
+st.write("Using `st.sidebar` to add content to the sidebar.")
+
 with st.sidebar:
-    st.write("This is inside the sidebar")
-    st.button("Sidebar")
+    st.write("This is in the sidebar")
+    st.button("Sidebar Button")
 
-# using st.tabs
+# 7. Tabs
+st.header("Tabs")
+st.write("Using `st.tabs()` to create tabbed sections.")
+
 tab1, tab2, tab3 = st.tabs(["Cat", "Dog", "Owl"])
 
 with tab1:
     st.write("This is the cat tab")
-    st.image("https://static.streamlit.io/examples/cat.jpg")
+    st.image("https://static.streamlit.io/examples/cat.jpg", width=300)
 
 with tab2:
     st.write("This is the dog tab")
-    st.image("https://static.streamlit.io/examples/dog.jpg")
+    st.image("https://static.streamlit.io/examples/dog.jpg", width=300)
 
 with tab3:
     st.write("This is the owl tab")
-    st.image("https://static.streamlit.io/examples/owl.jpg")
+    st.image("https://static.streamlit.io/examples/owl.jpg", width=300)
