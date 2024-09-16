@@ -1,61 +1,34 @@
+import numpy as np
+import pandas as pd
 import streamlit as st
 
 st.set_page_config(
-    page_title="Streamlit Part 7: Layouts",
-    page_icon="random",
-    layout="wide",
-    initial_sidebar_state="collapsed",
+    layout="wide", page_title="Streamlit Part 6: Charts", page_icon="random"
 )
 
-st.title("Streamlit Part 7: Layouts")
 
+st.write("## Streamlit Part 6: Charts")
+################## Basic Charts ##################
+st.write("### 1. Area Chart")
 
-# using st.columns
-st.write("### This is outside the columns")
+st.write("### 2. Bar Chart")
 
-# using st.container
-st.write("### This is outside the container")
+st.write("### 3. Line Chart")
 
-# using st.dialog
-st.write("### This is outside the dialog")
+st.write("### 4. Map")
 
+st.write("### 5. Scatter Chat")
 
-# with st.dialog("This is a dialog"):
-#     st.write("This is inside the dialog")
-#     st.button("Container 2")
-@st.dialog("Cast your vote")
-def vote(item):
-    st.write(f"Why is {item} your favorite?")
-    reason = st.text_input("Because...")
-    if st.button("Submit"):
-        st.session_state.vote = {"item": item, "reason": reason}
-        st.rerun()
+################## Advanced Charts ##################
+st.write("## Advanced Charts")
+st.write("### 6. Altair Chart")
 
+st.write("### 8. Graphviz Chart")
 
-if "vote" not in st.session_state:
-    st.write("Vote for your favorite")
-    if st.button("A"):
-        vote("A")
-    if st.button("B"):
-        vote("B")
-else:
-    f"You voted for {st.session_state.vote['item']} because {st.session_state.vote['reason']}"
+st.write("### 9. Plotly Chart")
 
-# using st.empty
-st.write("### This is outside the empty")
+st.write("### 10. pydeck Chart")
 
+st.write("### 11. pyplot Chart")
 
-# using st.expander
-st.write("### This is outside the expander")
-
-st.write("### This is outside the form")
-
-# using st.popover
-st.write("### Adding popover")
-
-
-# using st.sidebar
-st.write("### This is outside the sidebar")
-
-# using st.tabs
-st.write("### Adding tabs")
+st.write("### 12. Vega Chart")
