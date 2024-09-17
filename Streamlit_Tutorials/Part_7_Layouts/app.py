@@ -1,61 +1,42 @@
 import streamlit as st
+import time
 
+# Set the page configuration
 st.set_page_config(
-    page_title="Streamlit Part 7: Layouts",
-    page_icon="random",
-    layout="wide",
+    page_title="Streamlit Layouts Tutorial",
+    page_icon=":art:",
     initial_sidebar_state="collapsed",
 )
 
-st.title("Streamlit Part 7: Layouts")
+st.title("Streamlit Layouts Tutorial")
+
+# 1. Columns
+st.header("Columns")
+st.write("Using `st.columns()` to create columns.")
+
+# 2. Container
+st.header("Container")
+st.write("Using `st.container()` to group elements together.")
+
+# 3. Empty
+st.header("Empty")
+st.write("Using `st.empty()` as a placeholder for updating content.")
 
 
-# using st.columns
-st.write("### This is outside the columns")
-
-# using st.container
-st.write("### This is outside the container")
-
-# using st.dialog
-st.write("### This is outside the dialog")
+# 4. Expander
+st.header("Expander")
+st.write("Using `st.expander()` to hide/show content.")
 
 
-# with st.dialog("This is a dialog"):
-#     st.write("This is inside the dialog")
-#     st.button("Container 2")
-@st.dialog("Cast your vote")
-def vote(item):
-    st.write(f"Why is {item} your favorite?")
-    reason = st.text_input("Because...")
-    if st.button("Submit"):
-        st.session_state.vote = {"item": item, "reason": reason}
-        st.rerun()
+# 5. Form
+st.header("Form")
+st.write("Using `st.form()` to group input widgets with a submit button.")
+
+# 6. Sidebar
+st.header("Sidebar")
+st.write("Using `st.sidebar` to add content to the sidebar.")
 
 
-if "vote" not in st.session_state:
-    st.write("Vote for your favorite")
-    if st.button("A"):
-        vote("A")
-    if st.button("B"):
-        vote("B")
-else:
-    f"You voted for {st.session_state.vote['item']} because {st.session_state.vote['reason']}"
-
-# using st.empty
-st.write("### This is outside the empty")
-
-
-# using st.expander
-st.write("### This is outside the expander")
-
-st.write("### This is outside the form")
-
-# using st.popover
-st.write("### Adding popover")
-
-
-# using st.sidebar
-st.write("### This is outside the sidebar")
-
-# using st.tabs
-st.write("### Adding tabs")
+# 7. Tabs
+st.header("Tabs")
+st.write("Using `st.tabs()` to create tabbed sections.")
