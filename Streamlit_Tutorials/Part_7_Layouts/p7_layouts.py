@@ -18,6 +18,8 @@ st.write("Using `st.columns()` to create columns.")
 # Create two columns
 col1, col2 = st.columns(2)
 
+col1.write("This is column 1")
+
 with col1:
     st.write("This is column 1")
     if st.button("Button in Column 1"):
