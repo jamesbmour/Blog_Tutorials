@@ -1,37 +1,58 @@
+# Streamlit Part 10: Navigation and Pages
 import streamlit as st
 
-st.set_page_config(
-    page_title="Streamlit Part 10: Navigation Pages",
-    page_icon="🌟",
+st.title("Navigation and Pages")
+st.divider()
+st.write("### st.navigation")
+
+
+# st.navigation
+def page1():
+    st.write(st.session_state.foo)
+
+
+def page2():
+    st.write(st.session_state.bar)
+
+
+# Widgets shared by all the pages
+st.selectbox("Foo", ["A", "B", "C"], key="foo")
+st.checkbox("Bar", key="bar")
+
+pg = st.navigation([st.Page(page1), st.Page(page2)])
+pg.run()
+
+st.divider()
+st.write("### st.page")
+
+
+# def page2():
+#     st.title("Second page")
+#
+
+pg = st.navigation(
+    [
+        st.Page("./pages/page_1.py", title="First page", icon="🔥"),
+        st.Page(page2, title="Second page", icon=":material/favorite:"),
+    ]
 )
+pg.run()
 
-st.title("Streamlit Part 10: Navigation and Pages")
 
-st.write("### Navigation")
+st.divider()
+st.write("### st.page_link")
+# st.page_link
+# st.page_link("p10_Nav.py", label="Home", icon="🏠")
+# st.page_link("./pages/page_1.py", label="Page 1", icon="1️⃣")
+# st.page_link("pages/page_2.py", label="Page 2", icon="2️⃣", disabled=True)
+st.page_link("http://www.google.com", label="Google", icon="🌎")
 
-st.write("Use the sidebar or buttons below to navigate between pages.")
-
-# Sidebar navigation
-with st.sidebar:
-    st.write("## Sidebar Navigation")
-    page = st.radio("Go to", ["Main Page", "Page 1", "Page 2"])
-
-    if page == "Main Page":
-        st.experimental_set_query_params()  # Stay on the main page
-    else:
-        st.switch_page(page)
-
-# Buttons to switch pages
+st.divider()
 st.write("### st.switch_page")
-
-if st.button("Go to Page 1"):
-    st.switch_page("Page 1")
-
-if st.button("Go to Page 2"):
-    st.switch_page("Page 2")
-
-# Links to other pages
-st.write("### st.set_page_link")
-
-st.markdown("[Go to Page 1](./Page%201)")
-st.markdown("[Go to Page 2](./Page%202)")
+# st.switch_page
+if st.button("Home"):
+    st.switch_page("p10_Nav.py")
+if st.button("Page 1"):
+    st.switch_page("pages/page_1.py")
+if st.button("Page 2"):
+    st.switch_page("pages/page_2.py")
