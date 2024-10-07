@@ -4,7 +4,6 @@ import time
 # Set the page configuration for Streamlit app
 st.set_page_config(
     page_title="Streamlit Part 9: Status",  # Title of the page
-    page_icon="random",  # Random icon for the page
     layout="wide",  # Layout of the page
     initial_sidebar_state="collapsed",  # Initial state of the sidebar
 )
