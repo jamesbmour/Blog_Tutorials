@@ -2,13 +2,15 @@
 import streamlit as st
 import time
 
+# Set the page configuration for Streamlit app
 st.set_page_config(
     page_title="Streamlit Part 9: Status",
-    page_icon="random",
+    layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
 st.title("Streamlit Part 9: Status Elements")
-# Demonstrate st.progress
+#  st.progress
 st.write("### status.progress")
 
 # Initialize the progress bar
