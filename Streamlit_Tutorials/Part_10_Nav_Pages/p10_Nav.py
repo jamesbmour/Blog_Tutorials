@@ -32,7 +32,7 @@ st.write("### st.page")
 
 pg = st.navigation(
     [
-        st.Page("./pages/page_1.py", title="First page", icon="🔥"),
+        st.Page("pages/page1.py", title="First page", icon="🔥"),
         st.Page(page2, title="Second page", icon=":material/favorite:"),
     ]
 )
@@ -51,7 +51,7 @@ st.divider()
 st.write("### st.switch_page")
 # st.switch_page
 if st.button("Home"):
-    st.switch_page("p10_Nav.py")
+    st.switch_page("pages/home.py")
 if st.button("Page 1"):
     st.switch_page("pages/page_1.py")
 if st.button("Page 2"):
