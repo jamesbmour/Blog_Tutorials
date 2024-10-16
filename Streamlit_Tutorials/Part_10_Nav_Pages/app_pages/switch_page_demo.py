@@ -3,7 +3,7 @@ import streamlit as st
 
 
 def switch_page_demo():
-    st.title("Switch Page Demo")
+    st.write("### Switch Page Demo")
 
 
 if __name__ == "__main__":

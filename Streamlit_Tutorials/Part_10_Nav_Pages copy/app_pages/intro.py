@@ -1,7 +1,7 @@
 # pages/intro.py
 import streamlit as st
 
-
+# Home Page
 def intro():
     st.title("Streamlit Page Navigation Tutorial")
     st.write("Welcome to this tutorial on Streamlit page navigation!")
@@ -12,3 +12,4 @@ def intro():
 
 if __name__ == "__page__":
     intro()
+     

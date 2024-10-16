@@ -2,7 +2,7 @@
 import streamlit as st
 
 
-def nav():
+def navigation_intro():
     st.title("Introduction to st.navigation")
     st.write(
         "The `st.navigation` function is used to configure pages in a multi-page Streamlit app."
@@ -25,5 +25,5 @@ pg.run()
     st.write("This creates a sidebar navigation menu with three pages.")
 
 
-if __name__ == "__page__":
-    nav()
+if __name__ == "__main__":
+    navigation_intro()
