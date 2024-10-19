@@ -134,3 +134,6 @@ todo-env/
 
 !/.env
 !/Streamlit_Tutorials/Streamlit-docs.md
+!/Streamlit_Tutorials/Part_13_Conn_Secrets/.streamlit/secrets.toml
+
+Taipy_Series

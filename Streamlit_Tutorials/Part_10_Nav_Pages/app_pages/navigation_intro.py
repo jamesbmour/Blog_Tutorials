@@ -1,4 +1,4 @@
-# pages/navigation_intro.py
+# app_pages/navigation_intro.py
 import streamlit as st
 
 
@@ -12,9 +12,9 @@ def navigation_intro():
 import streamlit as st
 
 pages = [
-    st.Page("pages/intro.py", title="Introduction", icon="👋"),
-    st.Page("pages/page1.py", title="Page 1", icon="1️⃣"),
-    st.Page("pages/page2.py", title="Page 2", icon="2️⃣"),
+    st.Page("app_pages/intro.py", title="Introduction", icon="👋"),
+    st.Page("app_pages/page1.py", title="Page 1", icon="1️⃣"),
+    st.Page("app_pages/page2.py", title="Page 2", icon="2️⃣"),
 ]
 
 pg = st.navigation(pages)
@@ -25,5 +25,5 @@ pg.run()
     st.write("This creates a sidebar navigation menu with three pages.")
 
 
-if __name__ == "__main__":
+if __name__ == "__page__":
     navigation_intro()

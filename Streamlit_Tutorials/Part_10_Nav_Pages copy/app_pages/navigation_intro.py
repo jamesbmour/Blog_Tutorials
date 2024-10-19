@@ -8,7 +8,7 @@ import streamlit as st
 # The set of available pages can be updated with each rerun for dynamic navigation. By default, st.navigation draws the available pages in the side navigation if there is more than one page. This behavior can be changed using the position keyword argument.
 
 # As soon as any session of your app executes the st.navigation command, your app will ignore the pages/ directory (across all sessions).
-def nav():
+def navigation_intro():
     st.title("Introduction to st.navigation")
     st.write(
         "The `st.navigation` function is used to configure pages in a multi-page Streamlit app."
@@ -34,4 +34,4 @@ pg.run()
 
 
 if __name__ == "__page__":
-    nav()
+    navigation_intro()
