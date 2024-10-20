@@ -137,3 +137,6 @@ todo-env/
 !/Streamlit_Tutorials/Part_13_Conn_Secrets/.streamlit/secrets.toml
 
 Taipy_Series
+!/Streamlit_Tutorials/Part_12_State_Management/.streamlit/
+
+Streamlit_Tutorials/Part_12_State_Management/.streamlit/
