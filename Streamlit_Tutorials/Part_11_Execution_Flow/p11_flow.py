@@ -165,11 +165,3 @@ if "dialog_result" in st.session_state:
     if st.button("Clear Result"):
         del st.session_state.dialog_result
         st.rerun()
-
-# -------------------------------
-# Conclusion
-# -------------------------------
-st.header("Conclusion")
-st.write(
-    "This tutorial demonstrated various Streamlit execution flow elements. Experiment with them to create dynamic and interactive apps!"
-)

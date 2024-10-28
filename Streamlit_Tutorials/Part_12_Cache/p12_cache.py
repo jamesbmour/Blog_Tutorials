@@ -121,7 +121,3 @@ st.write(
 st.write(
     "Experiment with these features to create efficient and interactive Streamlit apps!"
 )
-
-# Video Narration: "And that concludes our tutorial on Streamlit caching and state management.
-# These powerful features allow you to optimize your app's performance and create more dynamic user experiences.
-# Try incorporating them into your own Streamlit projects!"
