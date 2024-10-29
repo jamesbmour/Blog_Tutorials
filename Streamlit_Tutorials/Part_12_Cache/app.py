@@ -1,47 +1,48 @@
 ###############################################################################
-# SECTION 1: IMPORTS AND BASIC SETUP
+# SECTION 12: Cache
+# app.py
 ###############################################################################
 import streamlit as st
+import time
+import pandas as pd
+import numpy as np
 
-st.title("Streamlit Session State Management Tutorial")
-st.header("1. Add Statefulness to Apps")
-
-
-###############################################################################
-# SECTION 2: BASIC COUNTER EXAMPLE
-###############################################################################
-st.subheader("Build a Counter")
-# Initialize 'count' in session state
-
+st.title("Streamlit Caching and State Tutorial")
 
 ###############################################################################
-# SECTION 3: SESSION STATE INITIALIZATION
+# SECTION 1: CACHING DATA WITH ST.CACHE_DATA
 ###############################################################################
-st.header("2. Initialize Values in Session State")
+st.header("1. st.cache_data")
+st.write("st.cache_data is used for caching functions that return data.")
 
 ###############################################################################
-# SECTION 4: READING AND UPDATING STATE
+# SECTION 2: RESOURCE CACHING WITH ST.CACHE_RESOURCE
 ###############################################################################
-st.header("3. Reads and Updates")
-
-###############################################################################
-# SECTION 5: CALLBACK FUNCTIONS
-###############################################################################
-st.header("4. Update Session State with Callbacks")
+st.header("2. st.cache_resource")
+st.write(
+    "st.cache_resource is used for caching global resources like ML models or database connections."
+)
 
 
 ###############################################################################
-# SECTION 6: ADVANCED STATE CONCEPTS
+# SECTION 3: CACHE MANAGEMENT
 ###############################################################################
-st.header("5. Advanced Concepts")
-
-###############################################################################
-# SECTION 7: STATE MANAGEMENT AND FORMS
-###############################################################################
-st.header("8. Forms and Callbacks")
+st.header("3. Clearing Cache")
 
 
-##############################################################################
-# SECTION 8: LIMITATIONS AND ERROR HANDLING
 ###############################################################################
-st.header("9. Caveats and Limitations")
+# SECTION 4: INTRODUCTION TO SESSION STATE
+###############################################################################
+st.header("4. Session State")
+st.write("Session State allows you to store and persist state for each user session.")
+
+###############################################################################
+# SECTION 5: ADVANCED SESSION STATE WITH CALLBACKS
+###############################################################################
+st.header("5. Callbacks with Session State")
+
+
+###############################################################################
+# SECTION 6: FORMS AND SESSION STATE INTEGRATION
+###############################################################################
+st.header("6. Forms and Session State")
