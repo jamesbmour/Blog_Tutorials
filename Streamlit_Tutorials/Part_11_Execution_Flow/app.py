@@ -47,5 +47,3 @@ st.write(
 # -------------------------------
 # Bonus: Combining Elements
 # -------------------------------
-st.header("Bonus: Combining Elements")
-st.write("Let's combine some of these elements in a more complex example.")
