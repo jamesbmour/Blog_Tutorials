@@ -46,7 +46,6 @@ st.header("2. st.fragment")
 st.write("`st.fragment` allows a part of your app to rerun independently.")
 
 
-# Define a fragment function using the @st.fragment decorator
 @st.fragment
 def update_counter():
     """
@@ -56,9 +55,11 @@ def update_counter():
     """
     if "counter" not in st.session_state:
         st.session_state.counter = 0
-    st.session_state.counter += 1
+
     st.write(f"Counter: {st.session_state.counter}")
+
     if st.button("Increment (Fragment Rerun)"):
+        st.session_state.counter += 1
         # Rerun only the fragment
         st.rerun(scope="fragment")
 
@@ -69,6 +70,10 @@ update_counter()
 # Button to trigger a full app rerun
 if st.button("Full App Rerun"):
     st.rerun()
+
+# Execute the fragment
+update_counter()
+
 
 # -------------------------------
 # 3. Using `st.rerun`
