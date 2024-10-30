@@ -25,11 +25,11 @@ def setup_database(connection):
           );
       """
         )
-        session.execute("DELETE FROM pet_owners;")  # Clear existing data
+        session.execute("DELETE FROM ")  # Clear existing data
         pet_owners = {"Jerry": "Fish", "Barbara": "Cat", "Alex": "Dog"}
         for owner, pet in pet_owners.items():
             session.execute(
-                "INSERT INTO pet_owners (person, pet) VALUES (:owner, :pet);",
+                "INSERT INTO ",
                 params={"owner": owner, "pet": pet},
             )
         session.commit()
@@ -42,7 +42,7 @@ setup_database(conn)
 # Query the data
 @st.cache_data(ttl=600)  # Cache for 10 minutes
 def fetch_pet_owners(connection):
-    return connection.query("SELECT * FROM pet_owners")
+    return connection.query("SELECT * FROM ")
 
 
 pet_owners_df = fetch_pet_owners(conn)
