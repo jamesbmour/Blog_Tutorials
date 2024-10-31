@@ -1,63 +1,40 @@
+###############################################################################
+# SECTION 13: Connections and Secrets
+# app.py
+###############################################################################
 import streamlit as st
-import sqlite3
 import os
 from faker import Faker
+from sqlalchemy import text
 
-# Everything is accessible via the st.secrets dict:
-st.write("DB username:", st.secrets["db_username"])
-st.write("DB password:", st.secrets["db_password"])
+st.title("Part 13: Connections and Secrets")
 
-st.write(
-    "Has environment variables been set:",
-    os.environ["db_username"] == st.secrets["db_username"],
-)
+# ===============================
+# SECRETS AND ENVIRONMENT SETUP
+# ===============================
 
-# 1. Connections
-st.header("1. Connections")
 
-# Connect to the SQLite database
-conn = sqlite3.connect("pets_db.sqlite")
-c = conn.cursor()
-# drop table if exists
-c.execute("DROP TABLE IF EXISTS pets")
-# Create table
-c.execute(
-    """
-    CREATE TABLE IF NOT EXISTS pets
-    (name TEXT, age INTEGER)
-    """
-)
+# ===============================
+# DATABASE SETUP AND CONNECTION
+# ===============================
 
-# Initialize Faker
-fake = Faker()
 
-# Generate and insert random data
-for _ in range(7):
-    # Generate random pet name (using first_name as pet name)
-    pet_name = fake.first_name()
-    # Generate random age between 1 and 15
-    pet_age = fake.random_int(min=1, max=15)
+# ===============================
+# DATA GENERATION AND INSERTION
+# ===============================
 
-    # Insert data
-    c.execute("INSERT INTO pets (name, age) VALUES (?, ?)", (pet_name, pet_age))
+st.header("2. Data Generation and Insertion")
 
-# Commit changes
-conn.commit()
 
-# Query data
-c.execute("SELECT * FROM pets")
-data = c.fetchall()
+# ===============================
+# DATA RETRIEVAL AND DISPLAY
+# ===============================
 
-# Display data
-st.write("Data in SQLite database:")
-st.write("Table: pets")
-st.table(data)
+st.header("3. Data Retrieval and Display")
 
-st.write("json data:")
-st.write(data)
 
-# Close connection
-conn.close()
-
-# Created/Modified files during execution:
-print("pets_db.sqlite")
+# ===============================
+# CLEANUP
+# ===============================
+# Close database connection
+st.header("4. Cleanup")
