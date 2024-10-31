@@ -19,6 +19,10 @@ st.title("Streamlit Caching and State Tutorial")
 st.header("1. st.cache_data")
 st.write("st.cache_data is used for caching functions that return data.")
 
+# clear cache button
+if st.button("Clear Cache"):
+    st.cache_data.clear()
+    st.write("Cache cleared!")
 
 # Explain caching to the audience:
 # - `st.cache_data` stores the result of a function so that the next time you call
@@ -43,7 +47,7 @@ st.write("Notice how the data loads quickly after the first time.")
 
 # Example showing performance improvement
 # - Use Streamlit's time tracking to demonstrate the benefit of caching.
-import time
+
 
 if st.button("Load Data with Timer"):
     start_time = time.time()
@@ -209,11 +213,3 @@ def get_large_array(seed):
     return arr
 
 
-# Excluding input parameters
-
-st.write("#### Excluding input parameters")
-
-
-@st.cache_data(ignore_hash=True)
-def get_random_number(lower, upper):
-    return np.random.randint(lower, upper)

@@ -1,56 +1,63 @@
-# app.py
-
 import streamlit as st
-import pandas as pd
+import sqlite3
 import os
+from faker import Faker
 
+# Everything is accessible via the st.secrets dict:
+st.write("DB username:", st.secrets["db_username"])
+st.write("DB password:", st.secrets["db_password"])
 
-# Initialize the connection
-@st.cache_resource
-def get_connection():
-    return st.connection("pet_db", type="sql")
+st.write(
+    "Has environment variables been set:",
+    os.environ["db_username"] == st.secrets["db_username"],
+)
 
+# 1. Connections
+st.header("1. Connections")
 
-conn = get_connection()
+# Connect to the SQLite database
+conn = sqlite3.connect("pets_db.sqlite")
+c = conn.cursor()
+# drop table if exists
+c.execute("DROP TABLE IF EXISTS pets")
+# Create table
+c.execute(
+    """
+    CREATE TABLE IF NOT EXISTS pets
+    (name TEXT, age INTEGER)
+    """
+)
 
+# Initialize Faker
+fake = Faker()
 
-# Function to set up the database
-def setup_database(connection):
-    with connection.session as session:
-        session.execute(
-            """
-          CREATE TABLE IF NOT EXISTS pet_owners (
-              person TEXT,
-              pet TEXT
-          );
-      """
-        )
-        session.execute("DELETE FROM ")  # Clear existing data
-        pet_owners = {"Jerry": "Fish", "Barbara": "Cat", "Alex": "Dog"}
-        for owner, pet in pet_owners.items():
-            session.execute(
-                "INSERT INTO ",
-                params={"owner": owner, "pet": pet},
-            )
-        session.commit()
+# Generate and insert random data
+for _ in range(7):
+    # Generate random pet name (using first_name as pet name)
+    pet_name = fake.first_name()
+    # Generate random age between 1 and 15
+    pet_age = fake.random_int(min=1, max=15)
 
+    # Insert data
+    c.execute("INSERT INTO pets (name, age) VALUES (?, ?)", (pet_name, pet_age))
 
-# Setup the database
-setup_database(conn)
+# Commit changes
+conn.commit()
 
+# Query data
+c.execute("SELECT * FROM pets")
+data = c.fetchall()
 
-# Query the data
-@st.cache_data(ttl=600)  # Cache for 10 minutes
-def fetch_pet_owners(connection):
-    return connection.query("SELECT * FROM ")
+# Display data
+st.write("Data in SQLite database:")
+st.write("Table: pets")
+st.table(data)
 
+st.write("json data:")
+st.write(data)
 
-pet_owners_df = fetch_pet_owners(conn)
+# Close connection
+conn.close()
 
-# Display the data
-st.title("Pet Owners Database")
-st.dataframe(pet_owners_df)
-
-# Display secrets (for demonstration purposes only; remove in production)
-st.subheader("Accessing Secrets")
-st.write("DB Username:", st.secrets.get("db_username", "Not Set"))
+# Created/Modified files during execution:
+print("pets_db.sqlite")
