@@ -50,22 +50,6 @@ with st.form(key="my_form"):
     st.checkbox("Yes or No", key="my_checkbox")
     st.form_submit_button(label="Submit", on_click=form_callback)
 
-# Demonstrate serialization limitation
-st.header("Serialization Limitation")
-if st.button("Try to store unserializable data"):
-    try:
-        st.session_state.unserializable = lambda x: x
-        st.write("Unserializable data stored successfully.")
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
-        st.write(
-            "Note: This will only raise an exception if 'enforceSerializableSessionState' is enabled in the Streamlit config."
-        )
-
-# Demonstrate widget state association
-st.header("Widget State Association")
-st.text_input("Your favorite color", key="color")
-st.write(f"Your favorite color is: {st.session_state.color}")
 
 #
 # if __name__ == "__main__":

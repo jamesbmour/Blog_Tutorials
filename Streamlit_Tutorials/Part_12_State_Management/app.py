@@ -1,47 +1,51 @@
-###############################################################################
-# SECTION 1: IMPORTS AND BASIC SETUP
-###############################################################################
+# Part 12: Streamlit Session State Management Tutorial
+# app.py
 import streamlit as st
 
+# Set the page configuration
+st.set_page_config(
+    page_title="Streamlit Session State Management Tutorial",
+    layout="wide",
+)
+
+# Title of the app
 st.title("Streamlit Session State Management Tutorial")
-st.header("1. Add Statefulness to Apps")
+
+with st.sidebar:
+    # Display current state
+    st.header("Current State")
+    st.write(st.session_state)
 
 
-###############################################################################
-# SECTION 2: BASIC COUNTER EXAMPLE
-###############################################################################
-st.subheader("Build a Counter")
-# Initialize 'count' in session state
+# 1. Initialize Values in Session State
+st.header("1. Initialize Values in Session State")
 
 
-###############################################################################
-# SECTION 3: SESSION STATE INITIALIZATION
-###############################################################################
-st.header("2. Initialize Values in Session State")
+st.markdown("---")
 
-###############################################################################
-# SECTION 4: READING AND UPDATING STATE
-###############################################################################
-st.header("3. Reads and Updates")
-
-###############################################################################
-# SECTION 5: CALLBACK FUNCTIONS
-###############################################################################
-st.header("4. Update Session State with Callbacks")
+# 2. Update Session State with Callbacks
+st.header("2. Update Session State with Callbacks")
 
 
-###############################################################################
-# SECTION 6: ADVANCED STATE CONCEPTS
-###############################################################################
-st.header("5. Advanced Concepts")
+st.markdown("---")
 
-###############################################################################
-# SECTION 7: STATE MANAGEMENT AND FORMS
-###############################################################################
-st.header("8. Forms and Callbacks")
+# 3. Delete Items from Session State
+st.header("3. Delete Items from Session State")
 
 
-##############################################################################
-# SECTION 8: LIMITATIONS AND ERROR HANDLING
-###############################################################################
-st.header("9. Caveats and Limitations")
+st.markdown("---")
+
+# 4. Serializable Session State
+st.header("4. Serializable Session State")
+
+
+st.markdown("---")
+
+# 5. Session State and Widget Association
+st.header("5. Session State and Widget Association")
+
+
+st.markdown("---")
+
+# 6. Forms and Callbacks
+st.header("6. Forms and Callbacks")
