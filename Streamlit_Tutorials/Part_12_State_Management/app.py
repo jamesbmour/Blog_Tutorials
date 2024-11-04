@@ -19,33 +19,69 @@ with st.sidebar:
 
 # 1. Initialize Values in Session State
 st.header("1. Initialize Values in Session State")
+# Initialize 'counter' if not present
+if "counter" not in st.session_state:
+    st.session_state.counter = 1  # Using attribute syntax
+
+# Initialize 'input_text' if not present
+if "input_text" not in st.session_state:
+    st.session_state["input_text"] = ""  # Using dictionary syntax
+
+st.subheader("Increment Counter Example")
+# Display current counter
+st.write(f"Current Counter: {st.session_state.counter}")
+
+# Button to increment the counter
+if st.button("Increment Counter"):
+    st.session_state.counter += 1
+    st.success("Counter incremented!")
 
 
 st.markdown("---")
-
 # 2. Update Session State with Callbacks
 st.header("2. Update Session State with Callbacks")
 
 
-st.markdown("---")
+def update_input():
+    st.session_state.input_text = st.session_state.text_input
+    st.info(f"Input Text Updated: {st.session_state.input_text}")
+
+
+st.text_input("Enter some text:", key="text_input", on_change=update_input)
+
 
 # 3. Delete Items from Session State
+st.markdown("---")
 st.header("3. Delete Items from Session State")
 
-
-st.markdown("---")
-
-# 4. Serializable Session State
-st.header("4. Serializable Session State")
-
-
-st.markdown("---")
-
-# 5. Session State and Widget Association
-st.header("5. Session State and Widget Association")
+if st.button("Reset Counter and Input Text"):
+    if "counter" in st.session_state:
+        del st.session_state.counter
+    if "input_text" in st.session_state:
+        del st.session_state["input_text"]
+    st.success("Session state variables 'counter' and 'input_text' have been deleted.")
 
 
 st.markdown("---")
+# 4. Session State and Widget Association
+st.header("4. Session State and Widget Association")
 
-# 6. Forms and Callbacks
-st.header("6. Forms and Callbacks")
+st.text_input("Your name:", key="name")
+st.write("Session State 'name':", st.session_state.get("name", ""))
+
+
+st.markdown("---")
+# 5. Forms and Callbacks
+st.header("5. Forms and Callbacks")
+
+
+def form_callback():
+    st.success("Form Submitted!")
+    st.write("Slider Value:", st.session_state.my_slider)
+    st.write("Checkbox Value:", st.session_state.my_checkbox)
+
+
+with st.form(key="my_form"):
+    st.slider("My slider", 0, 10, 5, key="my_slider")
+    st.checkbox("Check me", key="my_checkbox")
+    st.form_submit_button("Submit", on_click=form_callback)
