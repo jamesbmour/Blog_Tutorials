@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-st.title("Ollama with Streamlit demo")
+st.title("Ollama with Streamlit Chat App")
 
 # Initialize session state variables if they don't exist
 # Session state persists data between reruns of the app
