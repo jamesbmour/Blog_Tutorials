@@ -3,7 +3,14 @@ import streamlit as st
 import ollama
 from typing import Dict, Generator
 
+st.set_page_config(
+    page_title="Ollama Chat App",
+    page_icon="🤖",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+)
 st.title("Ollama with Streamlit demo")
+# add page config
 
 # Initialize session state variables if they don't exist
 # Session state persists data between reruns of the app
@@ -12,6 +19,13 @@ if "selected_model" not in st.session_state:
 if "messages" not in st.session_state:
     # Store chat history
     st.session_state.messages = []
+
+# Sidebar to display the current state and available models
+with st.sidebar:
+    st.write("State: ")
+    st.json(st.session_state, expanded=True)
+    st.write("Models: ")
+    st.json(ollama.list()["models"], expanded=True)
 
 
 # Define a function that generates responses from the Ollama model
@@ -31,9 +45,6 @@ def ollama_generator(model_name: str, messages: Dict) -> Generator:
 
 # Create a dropdown to select the AI model
 # Gets list of available models from Ollama and displays them
-# ollama_models = ollama.list()["models"]
-# st.write(ollama_models)
-st.write([model["name"] for model in ollama.list()["models"]])
 st.session_state.selected_model = st.selectbox(
     "Please select the model:", [model["name"] for model in ollama.list()["models"]]
 )
