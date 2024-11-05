@@ -1,76 +1,137 @@
-# Import necessary libraries
 import streamlit as st
-import ollama
-from typing import Dict, Generator
+from langchain_community.chat_models import ChatOllama
+from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain_community.vectorstores import FAISS
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.chains import create_history_aware_retriever
+from langchain_core.messages import HumanMessage
+import os
+import asyncio
+from langchain_core.embeddings import FakeEmbeddings
 
-# add page config
-st.set_page_config(
-    page_title="Ollama Chat App",
-    page_icon="🤖",
-    layout="centered",
-    initial_sidebar_state="collapsed",
-)
+from dotenv import load_dotenv
 
-st.title("Ollama with Streamlit Chat App")
+load_dotenv()
 
-# Initialize session state variables if they don't exist
-# Session state persists data between reruns of the app
-if "selected_model" not in st.session_state:
-    st.session_state.selected_model = ""
-if "messages" not in st.session_state:
-    # Store chat history
-    st.session_state.messages = []
-
-# Sidebar to display the current state and available models
-with st.sidebar:
-    st.write("State: ")
-    st.json(st.session_state, expanded=True)
-    st.write("Models: ")
-    st.json(ollama.list()["models"], expanded=True)
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 
 
-# Define a function that generates responses from the Ollama model
-def ollama_generator(model_name: str, messages: Dict) -> Generator:
-    """
-    Creates a generator that streams responses from the Ollama model
-    Args:
-        model_name: The name of the Ollama model to use
-        messages: Chat history in the format Ollama expects
-    Returns:
-        Generator yielding chunks of the model's response
-    """
-    stream = ollama.chat(model=model_name, messages=messages, stream=True)
-    for chunk in stream:
-        yield chunk["message"]["content"]
+async def get_conversational_answer(retriever, input, chat_history):
+    contextualize_q_system_prompt = """Given a chat history and the latest user question \
+    which might reference context in the chat history, formulate a standalone question \
+    which can be understood without the chat history. Do NOT answer the question, \
+    just reformulate it if needed and otherwise return it as is."""
+    contextualize_q_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", contextualize_q_system_prompt),
+            MessagesPlaceholder("chat_history"),
+            ("human", "{input}"),
+        ]
+    )
+
+    llm = ChatOllama(model="llama3.2")
+
+    history_aware_retriever = create_history_aware_retriever(
+        llm, retriever, contextualize_q_prompt
+    )
+
+    qa_system_prompt = """You are an assistant for question-answering tasks. \
+    Use the following pieces of retrieved context to answer the question. \
+    If you don't know the answer, just say that you don't know. \
+    Use three sentences maximum and keep the answer concise.\
+
+    {context}"""
+    qa_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", qa_system_prompt),
+            MessagesPlaceholder("chat_history"),
+            ("human", "{input}"),
+        ]
+    )
+
+    question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
+    rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+    ai_msg = rag_chain.invoke({"input": input, "chat_history": chat_history})
+    return ai_msg
 
 
-# Create a dropdown to select the AI model
-# Gets list of available models from Ollama and displays them
-st.session_state.selected_model = st.selectbox(
-    "Please select the model:", [model["name"] for model in ollama.list()["models"]]
-)
+def main():
+    st.header("Chat with your PDF using ollama by llama3 and gemini")
 
-# Display all previous messages in the chat history
-for message in st.session_state.messages:
-    # Creates chat bubble UI
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if "conversation" not in st.session_state:
+        st.session_state.conversation = None
 
-# Get user input through the chat interface
-if prompt := st.chat_input("How could I help you?"):
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    if "activate_chat" not in st.session_state:
+        st.session_state.activate_chat = False
 
-    # Display user message in chat message container
-    with st.chat_message("user"):
-        st.markdown(prompt)
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+        st.session_state.chat_history = []
 
-    # Generate and display AI response
-    with st.chat_message("assistant"):
-        # Stream the AI response using our generator function
-        response = st.write_stream(
-            ollama_generator(st.session_state.selected_model, st.session_state.messages)
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"], avatar=message["avatar"]):
+            st.markdown(message["content"])
+
+    embed_model = OllamaEmbeddings(model="mxbai-embed-large")
+
+    with st.sidebar:
+        st.subheader("Upload Your PDF File")
+        docs = st.file_uploader(
+            "⬆️ Upload your PDF & Click to process",
+            accept_multiple_files=True,
+            type=["pdf"],
         )
+        if st.button("Process"):
+            if docs is not None:
+                os.makedirs("./data", exist_ok=True)
+                for doc in docs:
+                    save_path = os.path.join("./data", doc.name)
+                    with open(save_path, "wb") as f:
+                        f.write(doc.getbuffer())
+                    st.write(f"Processed file: {save_path}")
 
-    # Add AI response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": response})
+            with st.spinner("Processing"):
+                loader = PyPDFDirectoryLoader("./data")
+                documents = loader.load()
+                vector_store = FAISS.from_documents(documents, embed_model)
+                retriever = vector_store.as_retriever()
+                if "retriever" not in st.session_state:
+                    st.session_state.retriever = retriever
+                st.session_state.activate_chat = True
+
+            # Delete uploaded PDF files after loading
+            for doc in os.listdir("./data"):
+                os.remove(os.path.join("./data", doc))
+
+    if st.session_state.activate_chat == True:
+        if prompt := st.chat_input("Ask your question from the PDF?"):
+            with st.chat_message("user", avatar="👨🏻"):
+                st.markdown(prompt)
+            st.session_state.messages.append(
+                {"role": "user", "avatar": "👨🏻", "content": prompt}
+            )
+            retriever = st.session_state.retriever
+            ai_msg = asyncio.run(
+                get_conversational_answer(
+                    retriever, prompt, st.session_state.chat_history
+                )
+            )
+            st.session_state.chat_history.extend(
+                [HumanMessage(content=prompt), ai_msg["answer"]]
+            )
+            cleaned_response = ai_msg["answer"]
+            with st.chat_message("assistant", avatar="🤖"):
+                st.markdown(cleaned_response)
+            st.session_state.messages.append(
+                {"role": "assistant", "avatar": "🤖", "content": cleaned_response}
+            )
+        else:
+            st.markdown("Upload your PDFs to chat")
+
+
+if __name__ == "__main__":
+    main()

@@ -2,3 +2,5 @@ fastapi
 pydantic
 email-validator
 streamlit
+langchain
+langchain-ollama
