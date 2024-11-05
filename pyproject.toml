@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "blog-tutorials"
+version = "0.1.0"
+description = ""
+authors = ["James <jamesbrendamour7@yahoo.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langchain = "^0.3.7"
+streamlit = "^1.39.0"
+langchain-qdrant = "^0.2.0"
+langgraph = "^0.2.45"
+langchain-community = "^0.3.5"
+langchain-chroma = "^0.1.4"
+lancedb = "^0.15.0"
+langchain-ollama = "^0.2.0"
+langchain-openai = "^0.2.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
