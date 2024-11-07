@@ -16,6 +16,7 @@ langchain-chroma = "^0.1.4"
 lancedb = "^0.15.0"
 langchain-ollama = "^0.2.0"
 langchain-openai = "^0.2.5"
+taipy = "^4.0.0"
 
 
 [build-system]
