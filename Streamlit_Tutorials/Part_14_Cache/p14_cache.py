@@ -1,7 +1,5 @@
 ###############################################################################
-# SECTION 0: IMPORTS AND SETUP
-# - Import required libraries (streamlit, time, pandas, numpy)
-# - Essential packages for data manipulation and UI
+# SECTION 14: Cache
 ###############################################################################
 import streamlit as st
 import time
@@ -24,7 +22,7 @@ if st.button("Clear Cache"):
     st.cache_data.clear()
     st.write("Cache cleared!")
 
-# Explain caching to the audience:
+
 # - `st.cache_data` stores the result of a function so that the next time you call
 #   it with the same inputs, it doesn't need to rerun the function—it just returns
 #   the stored result. This greatly reduces computation time and improves performance.
@@ -36,7 +34,6 @@ def load_data(nrows):
     return df
 
 
-# Demonstrate caching benefits:
 # - When the "Load Data" button is pressed, it takes 2 seconds initially but then
 #   loads instantly on subsequent clicks since the result is cached.
 if st.button("Load Data"):
@@ -45,10 +42,7 @@ if st.button("Load Data"):
 
 st.write("Notice how the data loads quickly after the first time.")
 
-# Example showing performance improvement
 # - Use Streamlit's time tracking to demonstrate the benefit of caching.
-
-
 if st.button("Load Data with Timer"):
     start_time = time.time()
     data = load_data(1000)
@@ -69,7 +63,6 @@ st.write(
 )
 
 
-# Explain the difference between `st.cache_data` and `st.cache_resource`:
 # - `st.cache_resource` is better suited for objects that are shared across sessions
 #   (e.g., ML models, database connections) as it ensures that the resource is only
 #   loaded once, saving both time and memory.
@@ -104,10 +97,8 @@ if st.button("Load Model with Timer"):
 ###############################################################################
 st.header("3. Clearing Cache")
 
-# Important notes for your audience:
 # - Cache management is critical when data changes frequently or to troubleshoot.
 # - Clearing cache helps ensure the most up-to-date data is used.
-
 if st.button("Clear Data Cache"):
     load_data.clear()
     st.write("Data cache cleared!")
@@ -117,35 +108,6 @@ if st.button("Clear All Caches"):
     st.cache_resource.clear()
     st.write("All caches cleared!")
 
-###############################################################################
-# SECTION 4: INTRODUCTION TO SESSION STATE
-# - Basic session state concepts
-# - State persistence across reruns
-# - Counter example implementation
-###############################################################################
-st.header("4. Session State")
-st.write("Session State allows you to store and persist state for each user session.")
-
-# Explain what Session State is:
-# - It keeps data in memory for a particular user's session, allowing for persistence
-#   of variables between reruns (e.g., counter, user input).
-# - This is especially helpful for creating interactive web applications.
-if "counter" not in st.session_state:
-    st.session_state.counter = 0
-
-st.write(f"Counter: {st.session_state.counter}")
-
-# Demonstrate state persistence:
-# - Every time the "Increment Counter" button is clicked, the counter value is increased
-#   and kept across reruns.
-if st.button("Increment Counter"):
-    st.session_state.counter += 1
-    st.rerun()
-
-# Using input widgets with Session State:
-# - Session State can also store user inputs for future use.
-st.text_input("Enter your name", key="name")
-st.write(f"Hello, {st.session_state.name}")
 
 ###############################################################################
 # SECTION 5: ADVANCED SESSION STATE WITH CALLBACKS
@@ -153,47 +115,8 @@ st.write(f"Hello, {st.session_state.name}")
 # - Event handling with session state
 # - Best practices for callbacks
 ###############################################################################
-st.header("5. Callbacks with Session State")
-
-
-# Callback explanation:
-# - Callback functions are executed after an event (e.g., clicking a button).
-# - Useful to modify session state variables or trigger specific actions.
-def increment_counter():
-    st.session_state.counter += 1
-
-
-# Demonstrate using callbacks:
-# - The "Increment (with callback)" button uses a callback function to increment
-#   the counter value without a full rerun.
-st.button("Increment (with callback)", on_click=increment_counter)
-
-###############################################################################
-# SECTION 6: FORMS AND SESSION STATE INTEGRATION
-# - Creating forms with multiple inputs
-# - Handling form submissions
-# - Accessing form data through session state
-###############################################################################
-st.header("6. Forms and Session State")
-
-# Forms explanation:
-# - Forms in Streamlit help bundle multiple widgets together for a cleaner user experience.
-# - Submission of forms can trigger data processing, and inputs are accessible via Session State.
-with st.form("my_form"):
-    st.write("Inside the form")
-    slider_val = st.slider("Form slider", 0, 10, 5, key="form_slider")
-    checkbox_val = st.checkbox("Form checkbox", key="form_checkbox")
-    submitted = st.form_submit_button("Submit")
-
-if submitted:
-    # After form submission, the state of the widgets is saved in `st.session_state`.
-    st.write("Slider value:", st.session_state.form_slider)
-    st.write("Checkbox value:", st.session_state.form_checkbox)
-
-
 # Example 1: Hashing a custom class
 st.subheader("Advance Usage:")
-
 st.write("#### The ttl (time-to-live) parameter")
 
 
@@ -211,5 +134,3 @@ def get_large_array(seed):
     np.random.seed(seed)
     arr = np.random.rand(100000)
     return arr
-
-
