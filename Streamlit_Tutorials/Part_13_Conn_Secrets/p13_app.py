@@ -11,7 +11,7 @@ st.title("Part 13: Connections and Secrets")
 st.header("1. Connection and Secret Management")
 # Your secrets code remains the same
 st.write("DB username:", st.secrets["db_username"])
-st.write("DB password:", st.secrets["db_password"])
+st.write("DB password:", st.secrets.db_password)
 st.write(
     "Has environment variables been set:",
     os.environ["db_username"] == st.secrets["db_username"],
@@ -36,6 +36,3 @@ st.header("3. Data Retrieval and Display")
 # Query and display the data you inserted
 pet_owners = conn.query("select * from pet_owners", ttl=500)
 st.dataframe(pet_owners)
-
-st.header("4. Cleanup")
-conn.close()
