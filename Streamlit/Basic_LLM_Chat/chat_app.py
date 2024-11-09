@@ -7,8 +7,10 @@ import requests
 from langchain_openai import ChatOpenAI
 from os import getenv
 from dotenv import load_dotenv
+import ollama
 
 load_dotenv()
+
 # add page config
 st.set_page_config(
     page_title="Ollama Chat App",
@@ -18,6 +20,15 @@ st.set_page_config(
 )
 
 st.title("Ollama with Streamlit Chat App")
+
+with st.expander("State and Models Info"):
+    st.write(
+        "Ollama is a conversational AI model developed by Langchain. It is designed to generate human-like responses to user input."
+    )
+    st.write("State: ")
+    st.json(st.session_state, expanded=True)
+    st.write("Models: ")
+    st.json(ollama.list()["models"][1], expanded=True)
 
 # Initialize session state variables if they don't exist
 if "selected_model" not in st.session_state:
@@ -36,15 +47,6 @@ def get_available_models():
         return []
     except:
         return []
-
-
-# Sidebar to display the current state and available models
-with st.sidebar:
-    st.write("State: ")
-    st.json(st.session_state, expanded=True)
-    st.write("Models: ")
-    available_models = get_available_models()
-    st.json(available_models, expanded=True)
 
 
 # Define a function that generates responses from the Ollama model
