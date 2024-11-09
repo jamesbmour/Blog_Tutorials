@@ -69,9 +69,12 @@ if prompt := st.chat_input("What would you like to know?"):
     # Generate response
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = chat_model.invoke(st.session_state.messages)
-            st.write(response.content)
-            st.session_state.messages.append(AIMessage(content=response.content))
+            # response = chat_model.invoke(st.session_state.messages)
+            response = chat_model.stream(st.session_state.messages)
+            response_content = "".join([chunk.content for chunk in response])
+            st.write(response_content)
+            # st.write(response.content)
+            st.session_state.messages.append(AIMessage(content=response_content))
 
 # Display model information
 st.sidebar.markdown("---")
