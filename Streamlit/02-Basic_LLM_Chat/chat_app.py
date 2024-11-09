@@ -1,13 +1,10 @@
-# Import necessary libraries
-import streamlit as st
-from typing import Dict, Generator
-from langchain_ollama.chat_models import ChatOllama
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
-import requests
-from os import getenv
+import streamlit as st
 from dotenv import load_dotenv
-import ollama
+from langchain_ollama import ChatOllama
+from os import getenv
 from langchain_openai import ChatOpenAI
+
 
 load_dotenv()
 
@@ -16,90 +13,67 @@ st.set_page_config(
     page_title="Ollama Chat App",
     page_icon="🤖",
     layout="centered",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
-st.title("Ollama with Streamlit Chat App")
+st.title("💬 Ollama with Streamlit Chat App")
 
-with st.expander("State and Models Info"):
-    st.write("State: ")
-    st.json(st.session_state, expanded=True)
-    st.write("Models: ")
-    st.json(ollama.list()["models"][1], expanded=True)
-
-# Initialize session state variables if they don't exist
-if "selected_model" not in st.session_state:
-    st.session_state.selected_model = ""
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-
-# Function to get available models from Ollama
-# def get_available_models():
-#     try:
-#         response = requests.get("http://localhost:11434/api/tags")
-#         if response.status_code == 200:
-#             models = response.json()
-#             return [model["name"] for model in models["models"]]
-#         return []
-#     except:
-#         return []
-#
-#
-# available_models = get_available_models()
-
-
-# Define a function that generates responses from the Ollama model
-def chat_generator(model_name: str, messages: list) -> Generator:
-    # chat_model = ChatOllama(model=model_name)
-
-    chat_model = ChatOpenAI(
-        model="meta-llama/llama-3.2-3b-instruct:free",
-        openai_api_key=getenv("OPENROUTER_API_KEY"),
-        openai_api_base="https://openrouter.ai/api/v1",
-        temperature=0.5,
+# Initialize model selection
+# with st.popover("Select Model", "Select the model you would like to use for chat."):
+with st.sidebar:
+    model_option = st.selectbox(
+        "Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b")
     )
 
-    # Convert messages to LangChain format
-    langchain_messages = []
-    for msg in messages:
-        if msg["role"] == "user":
-            langchain_messages.append(HumanMessage(content=msg["content"]))
-        elif msg["role"] == "assistant":
-            langchain_messages.append(AIMessage(content=msg["content"]))
-        elif msg["role"] == "system":
-            langchain_messages.append(SystemMessage(content=msg["content"]))
+    # Add a clear chat button
+    if st.button("Clear Chat"):
+        st.session_state.messages = [
+            SystemMessage(content="You are a helpful AI assistant.")
+        ]
+        st.rerun()
 
-    for chunk in chat_model.stream(langchain_messages):
-        yield chunk.content
+    if st.button("Clear Cache"):
+        st.caching.clear_cache()
 
 
-# # Create a dropdown to select the AI model
-# st.session_state.selected_model = st.selectbox(
-#     "Please select the model:",
-#     available_models if available_models else ["No models found"],
-# )
+# Initialize the chat model
+# @st.cache_resource
+def get_chat_model():
+    return ChatOllama(model=model_option)
 
-# Display all previous messages in the chat history
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
 
-# Get user input through the chat interface
-if prompt := st.chat_input("How could I help you?"):
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+chat_model = get_chat_model()
 
-    # Display user message in chat message container
+# Initialize session state for chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        SystemMessage(content="You are a helpful AI assistant.")
+    ]
+
+# Display chat messages
+for message in st.session_state.messages[1:]:  # Skip the system message
+    if isinstance(message, HumanMessage):
+        with st.chat_message("user"):
+            st.write(message.content)
+    elif isinstance(message, AIMessage):
+        with st.chat_message("assistant"):
+            st.write(message.content)
+
+# Chat input
+if prompt := st.chat_input("What would you like to know?"):
+    # Add user message to state and display
+    st.session_state.messages.append(HumanMessage(content=prompt))
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.write(prompt)
 
-    # Generate and display AI response
+    # Generate response
     with st.chat_message("assistant"):
-        # Stream the AI response using our generator function
-        response = st.write_stream(
-            chat_generator(st.session_state.selected_model, st.session_state.messages)
-        )
+        with st.spinner("Thinking..."):
+            response = chat_model.invoke(st.session_state.messages)
+            st.write(response.content)
+            st.session_state.messages.append(AIMessage(content=response.content))
 
-    # Add AI response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": response})
+# Display model information
+st.sidebar.markdown("---")
+st.sidebar.markdown("### Model Information")
+st.sidebar.write(f"Current Model: {model_option}")

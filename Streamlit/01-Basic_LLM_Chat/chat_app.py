@@ -1,9 +1,10 @@
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
-from os import getenv
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_ollama import ChatOllama
+from os import getenv
 from langchain_openai import ChatOpenAI
-import streamlit as st
+
 
 load_dotenv()
 
