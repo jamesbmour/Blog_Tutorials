@@ -53,7 +53,7 @@ def chat_generator(model_name: str, messages: list) -> Generator:
     Returns:
         Generator yielding chunks of the model's response
     """
-    chat_model = ChatOllama(model=model_name, streaming=True)
+    chat_model = ChatOllama(model=model_name)
 
     # Convert messages to LangChain format
     langchain_messages = []
