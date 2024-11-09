@@ -4,7 +4,11 @@ from typing import Dict, Generator
 from langchain_community.chat_models import ChatOllama
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 import requests
+from langchain_openai import ChatOpenAI
+from os import getenv
+from dotenv import load_dotenv
 
+load_dotenv()
 # add page config
 st.set_page_config(
     page_title="Ollama Chat App",
@@ -53,7 +57,14 @@ def chat_generator(model_name: str, messages: list) -> Generator:
     Returns:
         Generator yielding chunks of the model's response
     """
-    chat_model = ChatOllama(model=model_name)
+    # chat_model = ChatOllama(model=model_name)
+
+    chat_model = ChatOpenAI(
+        model="meta-llama/llama-3.2-3b-instruct:free",
+        openai_api_key=getenv("OPENROUTER_API_KEY"),
+        openai_api_base="https://openrouter.ai/api/v1",
+        temperature=0.5,
+    )
 
     # Convert messages to LangChain format
     langchain_messages = []
