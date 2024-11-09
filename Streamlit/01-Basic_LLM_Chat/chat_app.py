@@ -12,15 +12,27 @@ st.set_page_config(
     page_title="Ollama Chat App",
     page_icon="🤖",
     layout="centered",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
-st.title("Ollama with Streamlit Chat App")
+st.title("💬 Ollama with Streamlit Chat App")
 
 # Initialize model selection
-model_option = st.sidebar.selectbox(
-    "Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b")
-)
+# with st.popover("Select Model", "Select the model you would like to use for chat."):
+with st.sidebar:
+    model_option = st.selectbox(
+        "Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b")
+    )
+
+    # Add a clear chat button
+    if st.button("Clear Chat"):
+        st.session_state.messages = [
+            SystemMessage(content="You are a helpful AI assistant.")
+        ]
+        st.rerun()
+
+    if st.button("Clear Cache"):
+        st.caching.clear_cache()
 
 
 # Initialize the chat model
@@ -59,13 +71,6 @@ if prompt := st.chat_input("What would you like to know?"):
             response = chat_model.invoke(st.session_state.messages)
             st.write(response.content)
             st.session_state.messages.append(AIMessage(content=response.content))
-
-# Add a clear chat button
-if st.sidebar.button("Clear Chat"):
-    st.session_state.messages = [
-        SystemMessage(content="You are a helpful AI assistant.")
-    ]
-    st.rerun()
 
 # Display model information
 st.sidebar.markdown("---")
