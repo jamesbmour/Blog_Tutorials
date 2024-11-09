@@ -5,7 +5,6 @@ from langchain_ollama import ChatOllama
 from os import getenv
 from langchain_openai import ChatOpenAI
 
-
 load_dotenv()
 
 # add page config
@@ -19,7 +18,6 @@ st.set_page_config(
 st.title("💬 Ollama with Streamlit Chat App")
 
 # Initialize model selection
-# with st.popover("Select Model", "Select the model you would like to use for chat."):
 with st.sidebar:
     model_option = st.selectbox(
         "Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b")
@@ -33,13 +31,13 @@ with st.sidebar:
         st.rerun()
 
     if st.button("Clear Cache"):
-        st.caching.clear_cache()
+        st.cache_data.clear()
+        st.cache_resource.clear()
 
 
 # Initialize the chat model
-# @st.cache_resource
 def get_chat_model():
-    return ChatOllama(model=model_option)
+    return ChatOllama(model=model_option, streaming=True)
 
 
 chat_model = get_chat_model()
@@ -68,13 +66,20 @@ if prompt := st.chat_input("What would you like to know?"):
 
     # Generate response
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            # response = chat_model.invoke(st.session_state.messages)
-            response = chat_model.stream(st.session_state.messages)
-            response_content = "".join([chunk.content for chunk in response])
-            st.write(response_content)
-            # st.write(response.content)
-            st.session_state.messages.append(AIMessage(content=response_content))
+        message_placeholder = st.empty()
+        full_response = ""
+
+        # Stream the response
+        for chunk in chat_model.stream(st.session_state.messages):
+            if chunk.content:
+                full_response += chunk.content
+                message_placeholder.markdown(full_response + "▌")
+
+        # Final response without cursor
+        message_placeholder.markdown(full_response)
+
+        # Add the full response to session state
+        st.session_state.messages.append(AIMessage(content=full_response))
 
 # Display model information
 st.sidebar.markdown("---")
