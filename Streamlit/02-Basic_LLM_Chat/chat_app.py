@@ -1,13 +1,13 @@
 # Import necessary libraries
 import streamlit as st
 from typing import Dict, Generator
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama.chat_models import ChatOllama
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 import requests
-from langchain_openai import ChatOpenAI
 from os import getenv
 from dotenv import load_dotenv
 import ollama
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
@@ -22,9 +22,6 @@ st.set_page_config(
 st.title("Ollama with Streamlit Chat App")
 
 with st.expander("State and Models Info"):
-    st.write(
-        "Ollama is a conversational AI model developed by Langchain. It is designed to generate human-like responses to user input."
-    )
     st.write("State: ")
     st.json(st.session_state, expanded=True)
     st.write("Models: ")
@@ -38,27 +35,22 @@ if "messages" not in st.session_state:
 
 
 # Function to get available models from Ollama
-def get_available_models():
-    try:
-        response = requests.get("http://localhost:11434/api/tags")
-        if response.status_code == 200:
-            models = response.json()
-            return [model["name"] for model in models["models"]]
-        return []
-    except:
-        return []
+# def get_available_models():
+#     try:
+#         response = requests.get("http://localhost:11434/api/tags")
+#         if response.status_code == 200:
+#             models = response.json()
+#             return [model["name"] for model in models["models"]]
+#         return []
+#     except:
+#         return []
+#
+#
+# available_models = get_available_models()
 
 
 # Define a function that generates responses from the Ollama model
 def chat_generator(model_name: str, messages: list) -> Generator:
-    """
-    Creates a generator that streams responses from the Ollama model
-    Args:
-        model_name: The name of the Ollama model to use
-        messages: Chat history in LangChain message format
-    Returns:
-        Generator yielding chunks of the model's response
-    """
     # chat_model = ChatOllama(model=model_name)
 
     chat_model = ChatOpenAI(
@@ -78,16 +70,15 @@ def chat_generator(model_name: str, messages: list) -> Generator:
         elif msg["role"] == "system":
             langchain_messages.append(SystemMessage(content=msg["content"]))
 
-    # Stream the response
     for chunk in chat_model.stream(langchain_messages):
         yield chunk.content
 
 
-# Create a dropdown to select the AI model
-st.session_state.selected_model = st.selectbox(
-    "Please select the model:",
-    available_models if available_models else ["No models found"],
-)
+# # Create a dropdown to select the AI model
+# st.session_state.selected_model = st.selectbox(
+#     "Please select the model:",
+#     available_models if available_models else ["No models found"],
+# )
 
 # Display all previous messages in the chat history
 for message in st.session_state.messages:
