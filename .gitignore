@@ -145,3 +145,6 @@ Streamlit_Tutorials/Part_12_State_Management/.streamlit-/
 Langchian/langchain-tutorials-main-v2/
 
 Langchian/Langchain_examples/
+Streamlit_Tutorials/Part_12_State_Management/app copy.py
+# all python files ending in dev.py
+**/*dev.py
