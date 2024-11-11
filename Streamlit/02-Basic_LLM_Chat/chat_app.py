@@ -19,39 +19,56 @@ def configure_page():
         layout="centered",
         initial_sidebar_state="expanded",
     )
-    st.title("💬 Ollama with Streamlit Chat App")
+    st.title(f"💬 Streamlit Chat App: {st.session_state.model}")
     with st.expander("Check State"):
+        if st.button("Clear Chat"):
+            st.session_state.messages = [
+                SystemMessage(content="You are a helpful AI assistant.")
+            ]
+            st.rerun()
+            
+        
+        if st.button("Clear Cache"):
+            st.cache_data.clear()
+            st.cache_resource.clear()
+        
         st.write(st.session_state)
+
 
 
 
 # Function to update the system prompt
 def sidebar_model_config():
     with st.form("model_config"):
+        st.session_state.model = st.selectbox("Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b", "gpt-3.5-turbo"))
         new_prompt = st.text_area(
             "Change System Prompt:",
-            value=st.session_state.messages[0].content if "messages" in st.session_state else "You are a helpful AI assistant."
-        )
-        submitted = st.form_submit_button("Update Prompt")
+            value=st.session_state.messages[0].content if "messages" in st.session_state else "You are a helpful AI assistant.")
         
-        st.slider("Temperature", 0.0, 1.0, 0.5, key="temperature")
+        col1, col2 = st.columns(2)
         
-        st.text_input("Max Tokens", value="", key="max_tokens") 
-        st.text_input("Stop", value="", key="stop")
-        st.slider("Top P", 0.0, 1.0, 0.9, key="top_p")
-        st.slider("Frequency Penalty", 0.0, 2.0, 0.0, key="frequency_penalty")
-        st.slider("Presence Penalty", 0.0, 2.0, 0.0, key="presence_penalty")
-        st.slider("Stop Sequence", 0.0, 2.0, 1.0, key="stop_sequence")
+        with col1:
+            st.text_input("Max Tokens", value="2048", key="max_tokens") 
+            st.text_input("Stop", value="", key="stop")
+            st.slider("Top P", 0.0, 1.0, 0.5, key="top_p")
+            
+            
+        with col2:
+            st.slider("Frequency Penalty", 0.0, 2.0, 0.0, key="frequency_penalty")
+            st.slider("Presence Penalty", 0.0, 2.0, 0.0, key="presence_penalty")
+            st.slider("Stop Sequence", 0.0, 2.0, 1.0, key="stop_sequence")
         
         
+
         # Update the system prompt if the form is submitted
-        if submitted:
+        if st.form_submit_button("Update Config"):
             if "messages" in st.session_state and len(st.session_state.messages) > 0:
                 st.session_state.messages[0] = SystemMessage(content=new_prompt)
             else:
                 st.session_state.messages = [SystemMessage(content=new_prompt)]
             st.success("System prompt updated.")
             st.rerun()
+
 def handle_model_config():
     with st.expander("Model Config"):
         sidebar_model_config()
@@ -59,11 +76,7 @@ def handle_model_config():
         
 # Function to display and handle sidebar interactions
 def handle_sidebar():
-    selected_model = st.sidebar.selectbox(
-        "Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b", "gpt-3.5-turbo")
-    )
-    st.session_state.model = selected_model
-    # sidebar_model_config()
+    
     
     st.sidebar.divider()
     
@@ -82,7 +95,7 @@ def handle_sidebar():
     st.sidebar.markdown("---")
     st.sidebar.markdown("### Model Information")
     st.sidebar.write(f"Current Model: {selected_model}")
-    return selected_model
+    
 
 
 @st.cache_resource
@@ -131,9 +144,9 @@ def handle_user_input(chat_model):
 
 configure_page()
 
-selected_model = handle_sidebar()
+# selected_model = handle_sidebar()
 handle_model_config()
-chat_model = get_chat_model(selected_model)
+chat_model = get_chat_model(st.session_state.model)
 
 # Initialize the chat history in the session state if not already present
 if "messages" not in st.session_state:
