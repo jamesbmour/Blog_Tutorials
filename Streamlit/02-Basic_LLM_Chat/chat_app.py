@@ -1,5 +1,7 @@
 # Streamlit app to interact with the Ollama language model
 # File Name: app.py
+from mimetypes import init
+import re
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 import streamlit as st
 from dotenv import load_dotenv
@@ -7,10 +9,14 @@ from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 import os
 
+from sympy import init_session
+
 # Load environment variables from a .env file
 load_dotenv()
-
-
+        
+def init_session():
+    if "model" not in st.session_state:
+        st.session_state.model = "llama3.2"
 # Function to configure the Streamlit page layout and settings
 def configure_page():
     st.set_page_config(
@@ -39,8 +45,9 @@ def configure_page():
 
 # Function to update the system prompt
 def sidebar_model_config():
+    st.selectbox("Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b", "gpt-3.5-turbo"), key="model", index=0)
+
     with st.form("model_config"):
-        st.session_state.model = st.selectbox("Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b", "gpt-3.5-turbo"))
         new_prompt = st.text_area(
             "Change System Prompt:",
             value=st.session_state.messages[0].content if "messages" in st.session_state else "You are a helpful AI assistant.")
@@ -68,6 +75,9 @@ def sidebar_model_config():
                 st.session_state.messages = [SystemMessage(content=new_prompt)]
             st.success("System prompt updated.")
             st.rerun()
+    
+    return st.session_state.model
+    
 
 def handle_model_config():
     with st.expander("Model Config"):
@@ -99,14 +109,64 @@ def handle_sidebar():
 
 
 @st.cache_resource
+@st.cache_resource
 def get_chat_model(model_name):
-    if model_name == "gpt-3.5-turbo":
-        return ChatOpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            model=model_name,
-            streaming=True,
-        )
-    return ChatOllama(model=model_name, streaming=True)
+  """Initialize and return the chat model with all configuration parameters"""
+  try:
+      # Convert form inputs to appropriate types
+      max_tokens = int(st.session_state.max_tokens)
+      top_p = float(st.session_state.top_p)
+      frequency_penalty = float(st.session_state.frequency_penalty)
+      presence_penalty = float(st.session_state.presence_penalty)
+      stop_sequence = float(st.session_state.stop_sequence)
+      stop = st.session_state.stop.split(',') if st.session_state.stop else None
+
+      # Validate parameter ranges
+      if max_tokens < 1:
+          st.warning("Max tokens must be positive")
+          max_tokens = 2048
+      
+      if not (0 <= top_p <= 1):
+          st.warning("Top P must be between 0 and 1")
+          top_p = 0.5
+
+      if not (0 <= frequency_penalty <= 2):
+          st.warning("Frequency penalty must be between 0 and 2")
+          frequency_penalty = 0.0
+
+      if not (0 <= presence_penalty <= 2):
+          st.warning("Presence penalty must be between 0 and 2")
+          presence_penalty = 0.0
+
+      # Common parameters for both models
+      model_params = {
+          "streaming": True,
+          "max_tokens": max_tokens,
+          "top_p": top_p,
+          "frequency_penalty": frequency_penalty,
+          "presence_penalty": presence_penalty,
+      }
+
+      if model_name == "gpt-3.5-turbo":
+          return ChatOpenAI(
+              api_key=os.getenv("OPENAI_API_KEY"),
+              model=model_name,
+              stop=stop,
+              **model_params
+          )
+      else:
+          return ChatOllama(
+              model=model_name,
+              stop=stop,
+              num_ctx=max_tokens,
+              top_k=int(stop_sequence * 10),
+              **model_params
+          )
+  except ValueError as e:
+      st.error(f"Invalid parameter value: {str(e)}")
+      # Return a default model configuration
+      return ChatOllama(model=model_name, streaming=True) if model_name != "gpt-3.5-turbo" else \
+             ChatOpenAI(api_key=os.getenv("OPENAI_API_KEY"), model=model_name, streaming=True)
 
 
 # Function to display the chat messages on the screen
@@ -141,6 +201,7 @@ def handle_user_input(chat_model):
 ###########################################################################
 #########################  Main execution flow  ###########################
 ###########################################################################
+init_session()
 
 configure_page()
 
