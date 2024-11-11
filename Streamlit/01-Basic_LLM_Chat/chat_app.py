@@ -35,12 +35,14 @@ with st.sidebar:
         st.cache_resource.clear()
 
 
-# Initialize the chat model
-def get_chat_model():
-    return ChatOllama(model=model_option, streaming=True)
+# Cache the chat model
+@st.cache_resource
+def get_chat_model(model_name):
+    return ChatOllama(model=model_name, streaming=True)
 
 
-chat_model = get_chat_model()
+# Get the chat model
+chat_model = get_chat_model(model_option)
 
 # Initialize session state for chat history
 if "messages" not in st.session_state:
