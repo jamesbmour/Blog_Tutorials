@@ -177,7 +177,13 @@ def main():
         chat_model_with_retrieval = chat_model
     
     display_chat_messages()
-    handle_user_input(chat_model_with_retrieval, retriever=None if "vector_store" not in st.session_state else st.session_state.vector_store.as_retriever())
+        # Assign retriever separately
+    if "vector_store" in st.session_state:
+        retriever_instance = st.session_state.vector_store.as_retriever()
+    else:
+        retriever_instance = None
+        
+    handle_user_input(chat_model_with_retrieval, retriever=retriever_instance)
 
 if __name__ == "__main__":
     main()
