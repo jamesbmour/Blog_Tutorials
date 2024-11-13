@@ -92,7 +92,7 @@ def process_pdf(pdf_file):
     chunks = text_splitter.split_documents(documents)
 
     # Create a persist directory for Chroma
-    persist_directory = f"chroma_db_{pdf_file.name}"
+    persist_directory = f"db"
     st.session_state.persist_directory = persist_directory
 
     # Create vector store using Chroma
