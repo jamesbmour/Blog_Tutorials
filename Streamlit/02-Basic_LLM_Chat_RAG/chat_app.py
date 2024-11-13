@@ -1,6 +1,3 @@
-# Streamlit app to chat with PDFs using LangChain and Chroma Vector DB
-# File Name: app.py
-
 import streamlit as st
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 from dotenv import load_dotenv
@@ -124,15 +121,22 @@ def initialize_conversation(vectorstore, chat_model):
 
 def display_chat_messages():
     for message in st.session_state.messages:
-        role = "user" if message["role"] == "user" else "assistant"
-        with st.chat_message(role):
-            st.write(message["content"])
+        if isinstance(message, HumanMessage):
+            with st.chat_message("user"):
+                st.write(message.content)
+        elif isinstance(message, AIMessage):
+            with st.chat_message("assistant"):
+                st.write(message.content)
+        elif isinstance(message, SystemMessage):
+            with st.chat_message("system"):
+                st.write(message.content)
 
 
 def handle_user_input(conversation):
     if prompt := st.chat_input("Ask questions about your PDF"):
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": prompt})
+        # Create and add user message to chat history
+        user_message = HumanMessage(content=prompt)
+        st.session_state.messages.append(user_message)
         with st.chat_message("user"):
             st.write(prompt)
 
@@ -145,8 +149,9 @@ def handle_user_input(conversation):
             # Display the response
             message_placeholder.markdown(answer)
 
-            # Add assistant message to chat history
-            st.session_state.messages.append({"role": "assistant", "content": answer})
+            # Create and add assistant message to chat history
+            assistant_message = AIMessage(content=answer)
+            st.session_state.messages.append(assistant_message)
 
 
 def main():
