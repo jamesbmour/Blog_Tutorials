@@ -1,172 +1,130 @@
-# Streamlit app to interact with the Ollama language model
+# Streamlit app to interact with language models using LangChain, OllamaEmbeddings, and Chroma
 # File Name: app.py
-from mimetypes import init
-import re
-from langchain.schema import HumanMessage, AIMessage, SystemMessage
+
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
+from langchain.schema import HumanMessage, AIMessage, SystemMessage
+from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.document_loaders import PyPDFLoader
+from langchain.chains import RetrievalQA
 import os
-
-from sympy import init_session
+import tempfile
 
 # Load environment variables from a .env file
 load_dotenv()
-        
-def init_session():
-    if "model" not in st.session_state:
-        st.session_state.model = "llama3.2"
+
+
 # Function to configure the Streamlit page layout and settings
 def configure_page():
     st.set_page_config(
-        page_title="Ollama Chat App",
+        page_title="PDF Chat with LangChain, Ollama, and Chroma",
         page_icon="🤖",
-        layout="centered",
+        layout="wide",
         initial_sidebar_state="expanded",
     )
-    st.title(f"💬 Streamlit Chat App: {st.session_state.model}")
+    st.title("📄🤖 Chat with Your PDF using LangChain, Ollama, and Chroma")
     with st.expander("Check State"):
-        if st.button("Clear Chat"):
-            st.session_state.messages = [
-                SystemMessage(content="You are a helpful AI assistant.")
-            ]
-            st.rerun()
-            
-        
-        if st.button("Clear Cache"):
-            st.cache_data.clear()
-            st.cache_resource.clear()
-        
         st.write(st.session_state)
 
 
-
-
-# Function to update the system prompt
-def sidebar_model_config():
-    st.selectbox("Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b", "gpt-3.5-turbo"), key="model", index=0)
-
-    with st.form("model_config"):
-        new_prompt = st.text_area(
-            "Change System Prompt:",
-            value=st.session_state.messages[0].content if "messages" in st.session_state else "You are a helpful AI assistant.")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.text_input("Max Tokens", value="2048", key="max_tokens") 
-            st.text_input("Stop", value="", key="stop")
-            st.slider("Top P", 0.0, 1.0, 0.5, key="top_p")
-            
-            
-        with col2:
-            st.slider("Frequency Penalty", 0.0, 2.0, 0.0, key="frequency_penalty")
-            st.slider("Presence Penalty", 0.0, 2.0, 0.0, key="presence_penalty")
-            st.slider("Stop Sequence", 0.0, 2.0, 1.0, key="stop_sequence")
-        
-        
-
-        # Update the system prompt if the form is submitted
-        if st.form_submit_button("Update Config"):
-            if "messages" in st.session_state and len(st.session_state.messages) > 0:
-                st.session_state.messages[0] = SystemMessage(content=new_prompt)
-            else:
-                st.session_state.messages = [SystemMessage(content=new_prompt)]
-            st.success("System prompt updated.")
-            st.rerun()
-    
-    return st.session_state.model
-    
-
-def handle_model_config():
-    with st.expander("Model Config"):
-        sidebar_model_config()
-        
-        
 # Function to display and handle sidebar interactions
 def handle_sidebar():
-    
-    
+    st.sidebar.header("Configuration")
+
+    # Model Selection
+    selected_model = st.sidebar.selectbox(
+        "Select Model", ("llama3.2", "llama3.2:1b", "qwen2.5:0.5b", "gpt-3.5-turbo")
+    )
+    st.session_state.model = selected_model
+
     st.sidebar.divider()
-    
+
+    # PDF Upload
+    uploaded_file = st.sidebar.file_uploader("Upload a PDF", type=["pdf"])
+    if uploaded_file:
+        if "vector_store" not in st.session_state:
+            with st.spinner("Processing PDF..."):
+                try:
+                    documents = load_pdf(uploaded_file)
+                    texts = split_text(documents)
+                    embeddings = get_embeddings()
+                    vector_store = create_vector_store(texts, embeddings)
+                    st.session_state.vector_store = vector_store
+                    st.success("PDF processed and indexed successfully!")
+                except Exception as e:
+                    st.error(f"Error processing PDF: {e}")
+
+    st.sidebar.divider()
+
+    # Chat Management
     if st.sidebar.button("Clear Chat"):
         st.session_state.messages = [
             SystemMessage(content="You are a helpful AI assistant.")
         ]
+        st.session_state.vector_store = None
         st.rerun()
-        
-    
+
     if st.sidebar.button("Clear Cache"):
         st.cache_data.clear()
         st.cache_resource.clear()
 
-
     st.sidebar.markdown("---")
     st.sidebar.markdown("### Model Information")
     st.sidebar.write(f"Current Model: {selected_model}")
-    
+    return selected_model
 
 
-@st.cache_resource
 @st.cache_resource
 def get_chat_model(model_name):
-  """Initialize and return the chat model with all configuration parameters"""
-  try:
-      # Convert form inputs to appropriate types
-      max_tokens = int(st.session_state.max_tokens)
-      top_p = float(st.session_state.top_p)
-      frequency_penalty = float(st.session_state.frequency_penalty)
-      presence_penalty = float(st.session_state.presence_penalty)
-      stop_sequence = float(st.session_state.stop_sequence)
-      stop = st.session_state.stop.split(',') if st.session_state.stop else None
+    if model_name == "gpt-3.5-turbo":
+        from langchain_openai import ChatOpenAI
 
-      # Validate parameter ranges
-      if max_tokens < 1:
-          st.warning("Max tokens must be positive")
-          max_tokens = 2048
-      
-      if not (0 <= top_p <= 1):
-          st.warning("Top P must be between 0 and 1")
-          top_p = 0.5
+        return ChatOpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            model=model_name,
+            streaming=True,
+        )
+    return ChatOllama(model=model_name, streaming=True)
 
-      if not (0 <= frequency_penalty <= 2):
-          st.warning("Frequency penalty must be between 0 and 2")
-          frequency_penalty = 0.0
 
-      if not (0 <= presence_penalty <= 2):
-          st.warning("Presence penalty must be between 0 and 2")
-          presence_penalty = 0.0
+@st.cache_resource
+def get_embeddings():
+    return OllamaEmbeddings(model="mxbai-embed-large")
 
-      # Common parameters for both models
-      model_params = {
-          "streaming": True,
-          "max_tokens": max_tokens,
-          "top_p": top_p,
-          "frequency_penalty": frequency_penalty,
-          "presence_penalty": presence_penalty,
-      }
 
-      if model_name == "gpt-3.5-turbo":
-          return ChatOpenAI(
-              api_key=os.getenv("OPENAI_API_KEY"),
-              model=model_name,
-              stop=stop,
-              **model_params
-          )
-      else:
-          return ChatOllama(
-              model=model_name,
-              stop=stop,
-              num_ctx=max_tokens,
-              top_k=int(stop_sequence * 10),
-              **model_params
-          )
-  except ValueError as e:
-      st.error(f"Invalid parameter value: {str(e)}")
-      # Return a default model configuration
-      return ChatOllama(model=model_name, streaming=True) if model_name != "gpt-3.5-turbo" else \
-             ChatOpenAI(api_key=os.getenv("OPENAI_API_KEY"), model=model_name, streaming=True)
+def load_pdf(uploaded_file):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_file.write(uploaded_file.read())
+        tmp_file_path = tmp_file.name
+    loader = PyPDFLoader(tmp_file_path)
+    documents = loader.load()
+    os.unlink(tmp_file_path)  # Clean up the temporary file
+    return documents
+
+
+def split_text(documents):
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, chunk_overlap=200, length_function=len
+    )
+    texts = text_splitter.split_documents(documents)
+    return texts
+
+
+def create_vector_store(texts, embeddings):
+    # Define the directory where Chroma will store its data
+    chroma_persist_directory = os.path.join(tempfile.gettempdir(), "chroma_db")
+
+    # Initialize Chroma vector store
+    vector_store = Chroma.from_documents(
+        documents=texts,
+        embedding=embeddings,
+        persist_directory=chroma_persist_directory,
+    )
+    # Persist the vector store to disk
+    vector_store.persist()
+    return vector_store
 
 
 # Function to display the chat messages on the screen
@@ -181,8 +139,8 @@ def display_chat_messages():
 
 
 # Function to handle user input and update the chat conversation
-def handle_user_input(chat_model):
-    if prompt := st.chat_input("What would you like to know?"):
+def handle_user_input(chat_model, retriever):
+    if prompt := st.chat_input("Ask something about your PDF"):
         st.session_state.messages.append(HumanMessage(content=prompt))
         with st.chat_message("user"):
             st.write(prompt)
@@ -190,32 +148,52 @@ def handle_user_input(chat_model):
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
-            for chunk in chat_model.stream(st.session_state.messages):
-                if chunk.content:  # Update the response content
-                    full_response += chunk.content
-                    message_placeholder.markdown(full_response + "▌")
-            message_placeholder.markdown(full_response)
-            st.session_state.messages.append(AIMessage(content=full_response))
+            try:
+                # Use the RetrievalQA chain to get the response
+                response = chat_model.run(prompt)
+                full_response = response
+                message_placeholder.markdown(full_response)
+                st.session_state.messages.append(AIMessage(content=full_response))
+            except Exception as e:
+                message_placeholder.markdown(
+                    "❌ An error occurred while generating the response."
+                )
+                st.error(f"Error: {e}")
 
 
-###########################################################################
-#########################  Main execution flow  ###########################
-###########################################################################
-init_session()
+def main():
+    configure_page()
+    selected_model = handle_sidebar()
+    chat_model = get_chat_model(selected_model)
 
-configure_page()
+    # Initialize the chat history in the session state if not already present
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            SystemMessage(content="You are a helpful AI assistant.")
+        ]
 
-# selected_model = handle_sidebar()
-handle_model_config()
-chat_model = get_chat_model(st.session_state.model)
+    # Initialize vector store if PDF is uploaded
+    if "vector_store" in st.session_state:
+        retriever = st.session_state.vector_store.as_retriever()
+        qa_chain = RetrievalQA.from_chain_type(
+            llm=chat_model,
+            chain_type="stuff",
+            retriever=retriever,
+            return_source_documents=False,
+        )
+        chat_model_with_retrieval = qa_chain
+    else:
+        chat_model_with_retrieval = chat_model
 
-# Initialize the chat history in the session state if not already present
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        SystemMessage(content="You are a helpful AI assistant.")
-    ]
+    display_chat_messages()
+    # Assign retriever separately
+    if "vector_store" in st.session_state:
+        retriever_instance = st.session_state.vector_store.as_retriever()
+    else:
+        retriever_instance = None
 
-display_chat_messages()
+    handle_user_input(chat_model_with_retrieval, retriever=retriever_instance)
 
-handle_user_input(chat_model)
 
+if __name__ == "__main__":
+    main()
