@@ -6,6 +6,7 @@
 	],
 	"settings": {
 		"taipyStudio.gUI.elementsFilePaths": [],
-		"CodeGPT.apiKey": "CodeGPT Plus Beta"
+		"CodeGPT.apiKey": "CodeGPT Plus Beta",
+		"workbench.colorCustomizations": {}
 	}
 }
