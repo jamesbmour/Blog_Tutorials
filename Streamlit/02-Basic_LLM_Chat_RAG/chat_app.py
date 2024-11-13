@@ -12,7 +12,6 @@ import os
 import tempfile
 import shutil
 
-# Load environment variables
 load_dotenv()
 
 
@@ -34,26 +33,27 @@ def handle_sidebar():
     )
     st.session_state.model = selected_model
     st.sidebar.divider()
-
     if st.sidebar.button("Clear Chat"):
         st.session_state.messages = []
         st.session_state.conversation = None
         # Clean up Chroma database
-        if "persist_directory" in st.session_state:
-            try:
-                shutil.rmtree(st.session_state.persist_directory)
-            except:
-                pass
+        cleanup_chroma_db()
         st.rerun()
-
     if st.sidebar.button("Clear Cache"):
         st.cache_data.clear()
         st.cache_resource.clear()
-
     st.sidebar.markdown("---")
     st.sidebar.markdown("### Model Information")
     st.sidebar.write(f"Current Model: {selected_model}")
     return selected_model
+
+
+def cleanup_chroma_db():
+    if "persist_directory" in st.session_state:
+        try:
+            shutil.rmtree(st.session_state.persist_directory)
+        except:
+            pass
 
 
 @st.cache_resource
@@ -73,41 +73,50 @@ def get_embeddings():
 
 
 def process_pdf(pdf_file):
-    # Create a temporary file to save the uploaded PDF
+    tmp_file_path = save_temp_pdf(pdf_file)
+    documents = load_pdf(tmp_file_path)
+    chunks = split_pdf(documents)
+    persist_directory = create_chroma_persist_directory()
+    vectorstore = create_vectorstore(chunks, persist_directory)
+    os.unlink(tmp_file_path)
+    return vectorstore
+
+
+def save_temp_pdf(pdf_file):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
         tmp_file.write(pdf_file.getvalue())
         tmp_file_path = tmp_file.name
+    return tmp_file_path
 
-    # Load and process the PDF
+
+def load_pdf(tmp_file_path):
     loader = PyPDFLoader(tmp_file_path)
-    documents = loader.load()
+    return loader.load()
 
-    # Split the documents into chunks
+
+def split_pdf(documents):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000, chunk_overlap=200, length_function=len
     )
-    chunks = text_splitter.split_documents(documents)
+    return text_splitter.split_documents(documents)
 
-    # Create a persist directory for Chroma
+
+def create_chroma_persist_directory():
     persist_directory = f"db"
     st.session_state.persist_directory = persist_directory
+    return persist_directory
 
-    # Create vector store using Chroma
+
+def create_vectorstore(chunks, persist_directory):
     embeddings = get_embeddings()
-    vectorstore = Chroma.from_documents(
+    return Chroma.from_documents(
         documents=chunks, embedding=embeddings, persist_directory=persist_directory
     )
-
-    # Clean up the temporary file
-    os.unlink(tmp_file_path)
-
-    return vectorstore
 
 
 def initialize_conversation(vectorstore, chat_model):
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-
-    conversation = ConversationalRetrievalChain.from_llm(
+    return ConversationalRetrievalChain.from_llm(
         llm=chat_model,
         retriever=vectorstore.as_retriever(
             search_kwargs={"k": 3}  # Retrieve top 3 most relevant chunks
@@ -115,8 +124,6 @@ def initialize_conversation(vectorstore, chat_model):
         memory=memory,
         verbose=True,
     )
-
-    return conversation
 
 
 def display_chat_messages():
@@ -134,22 +141,15 @@ def display_chat_messages():
 
 def handle_user_input(conversation):
     if prompt := st.chat_input("Ask questions about your PDF"):
-        # Create and add user message to chat history
         user_message = HumanMessage(content=prompt)
         st.session_state.messages.append(user_message)
         with st.chat_message("user"):
             st.write(prompt)
-
-        # Generate response
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             response = conversation({"question": prompt})
             answer = response["answer"]
-
-            # Display the response
             message_placeholder.markdown(answer)
-
-            # Create and add assistant message to chat history
             assistant_message = AIMessage(content=answer)
             st.session_state.messages.append(assistant_message)
 
@@ -159,45 +159,39 @@ def main():
     selected_model = handle_sidebar()
     chat_model = get_chat_model(selected_model)
 
-    # Initialize session state for messages and conversation
+    initialize_session_state()
+
+    pdf_file = st.file_uploader("Upload your PDF", type=["pdf"])
+    if pdf_file:
+        handle_pdf_upload(pdf_file, chat_model)
+    else:
+        st.info("Please upload a PDF file to start chatting.")
+
+
+def initialize_session_state():
     if "messages" not in st.session_state:
         st.session_state.messages = []
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
 
-    # File uploader
-    pdf_file = st.file_uploader("Upload your PDF", type=["pdf"])
 
-    if pdf_file:
-        if (
-            "pdf_processed" not in st.session_state
-            or st.session_state.pdf_processed != pdf_file.name
-        ):
-            with st.spinner("Processing PDF..."):
-                # Clean up old Chroma database if it exists
-                if "persist_directory" in st.session_state:
-                    try:
-                        shutil.rmtree(st.session_state.persist_directory)
-                    except:
-                        pass
-
-                vectorstore = process_pdf(pdf_file)
-                st.session_state.conversation = initialize_conversation(
-                    vectorstore, chat_model
-                )
-                st.session_state.pdf_processed = pdf_file.name
-                st.session_state.messages = (
-                    []
-                )  # Clear messages when new PDF is uploaded
-                st.success("PDF processed successfully!")
-
-        # Display chat interface
-        display_chat_messages()
-
-        if st.session_state.conversation:
-            handle_user_input(st.session_state.conversation)
-    else:
-        st.info("Please upload a PDF file to start chatting.")
+def handle_pdf_upload(pdf_file, chat_model):
+    if (
+        "pdf_processed" not in st.session_state
+        or st.session_state.pdf_processed != pdf_file.name
+    ):
+        with st.spinner("Processing PDF..."):
+            cleanup_chroma_db()
+            vectorstore = process_pdf(pdf_file)
+            st.session_state.conversation = initialize_conversation(
+                vectorstore, chat_model
+            )
+            st.session_state.pdf_processed = pdf_file.name
+            st.session_state.messages = []
+            st.success("PDF processed successfully!")
+    display_chat_messages()
+    if st.session_state.conversation:
+        handle_user_input(st.session_state.conversation)
 
 
 if __name__ == "__main__":
