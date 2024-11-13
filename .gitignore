@@ -148,3 +148,6 @@ Langchian/Langchain_examples/
 Streamlit_Tutorials/Part_12_State_Management/app copy.py
 # all python files ending in dev.py
 **/*dev.py
+**/*dev.ipynb!/.env
+
+.env
