@@ -154,20 +154,6 @@ def handle_user_input(conversation):
             st.session_state.messages.append(assistant_message)
 
 
-def main():
-    configure_page()
-    selected_model = handle_sidebar()
-    chat_model = get_chat_model(selected_model)
-
-    initialize_session_state()
-
-    pdf_file = st.file_uploader("Upload your PDF", type=["pdf"])
-    if pdf_file:
-        handle_pdf_upload(pdf_file, chat_model)
-    else:
-        st.info("Please upload a PDF file to start chatting.")
-
-
 def initialize_session_state():
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -192,6 +178,20 @@ def handle_pdf_upload(pdf_file, chat_model):
     display_chat_messages()
     if st.session_state.conversation:
         handle_user_input(st.session_state.conversation)
+
+
+def main():
+    configure_page()
+    selected_model = handle_sidebar()
+    chat_model = get_chat_model(selected_model)
+
+    initialize_session_state()
+
+    pdf_file = st.file_uploader("Upload your PDF", type=["pdf"])
+    if pdf_file:
+        handle_pdf_upload(pdf_file, chat_model)
+    else:
+        st.info("Please upload a PDF file to start chatting.")
 
 
 if __name__ == "__main__":
