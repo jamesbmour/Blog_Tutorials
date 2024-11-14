@@ -98,9 +98,7 @@ def save_temp_pdf(pdf_file):
 
 def load_pdf(tmp_file_path):
     """Load the PDF file using PyPDFLoader and return the documents."""
-    # Create a PyPDFLoader instance with the file path
     loader = PyPDFLoader(tmp_file_path)
-    # Load the PDF document
     return loader.load()
 
 
