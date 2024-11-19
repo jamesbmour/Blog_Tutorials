@@ -151,3 +151,9 @@ Streamlit_Tutorials/Part_12_State_Management/app copy.py
 **/*dev.ipynb!/.env
 
 .env
+
+node_modules/
+
+Langchain_examples/
+
+.DS_Store
