@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Element Selection Example</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header */
+        #main-header {
+            background-color: #b7c2ce;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        #main-header ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #main-header li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        /* Sections */
+        section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        section h2 {
+            margin-top: 0;
+        }
+
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .action-button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-button:hover {
+            background-color: #27ae60;
+        }
+
+        /* Lists */
+        #item-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        .list-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 3px;
+        }
+
+        /* Input Box */
+        #input-box {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+        }
+
+        /* Boxes in Section 3 */
+        .container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .box {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+        }
+
+        .red {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        footer a {
+            color: #3498db;
+        }
+
+        footer a:hover {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header">
+        <h1>HTML Element Selection Demo</h1>
+        <nav>
+            <ul>
+                <li><a href="#section1" class="nav-link">Section 1</a></li>
+                <li><a href="#section2" class="nav-link">Section 2</a></li>
+                <li><a href="#section3" class="nav-link">Section 3</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="section1">
+            <h2>Section 1</h2>
+            <p>This is a <span class="highlight">highlighted</span> paragraph.</p>
+            <button id="btn1" class="action-button">Click Me</button>
+        </section>
+
+        <section id="section2">
+            <h2>Section 2</h2>
+            <ul id="item-list">
+                <li class="list-item">Item 1</li>
+                <li class="list-item">Item 2</li>
+                <li class="list-item">Item 3</li>
+            </ul>
+            <input type="text" id="input-box" placeholder="Type something..." />
+            <button class="action-button">Submit</button>
+        </section>
+
+        <section id="section3">
+            <h2>Section 3</h2>
+            <div class="container">
+                <div class="box red" id="box1">Box 1</div>
+                <div class="box" id="box2">Box 2</div>
+                <div class="box" id="box3">Box 3</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Created by <span class="author">Your Name</span>. Follow me on <a href="#" class="social-link">Twitter</a>.</p>
+    </footer>
+</body>
+</html>
