@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../LangChain_101"
 		}
 	],
 	"settings": {
